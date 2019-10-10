@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SaiGonFood</string>
+    <string name="search">Tìm kiếm</string>
+    <!--    <string name="facebook_app_id">363548940987577</string>-->
+    <string name="facebook_app_id">278065246105234</string>
+    <string name="fb_login_protocol_scheme">fb363548940987577</string>
+    <string name="map_key" translatable="false">AIzaSyC3Ch79NUCRLxToyz2Byjo-V0yDEpNH6g8</string>
+    <string name="title_activity_maps">Map</string>
+
+</resources>

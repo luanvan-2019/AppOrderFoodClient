@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_search_shape"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_search"
+            android:tint="#d0d0d0" />
+
+        <TextView
+            android:id="@+id/txtsearch"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:hint="Tìm kiếm"
+            android:inputType="text"
+            android:maxLength="20"
+            android:paddingLeft="5dp"
+            android:paddingRight="15sp"
+            android:textSize="14.4sp" />
+
+    </LinearLayout>
+    <ImageView
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/ic_notification"
+        android:layout_width="20dp"
+        android:layout_height="50dp" />
+
+</androidx.appcompat.widget.Toolbar>

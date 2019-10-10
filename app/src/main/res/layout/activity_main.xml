@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:background="#f05421">
+
+   <ImageView android:id="@+id/splashscreen"
+       android:layout_width="100dp"
+       android:layout_height="100dp"
+       android:src="@drawable/delivery"
+       android:layout_gravity="center"/>
+
+   <TextView
+       android:id="@+id/txtSaigonfood"
+       android:textStyle="bold"
+       android:gravity="center"
+       android:textSize="35sp"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="SaiGonFood"
+       android:textColor="#ffff"/>
+
+
+</LinearLayout>
