@@ -13,7 +13,7 @@
        android:layout_gravity="center"/>
 
    <TextView
-       android:id="@+id/txtSaigonfood"
+       android:id="@+id/txtLogo"
        android:textStyle="bold"
        android:gravity="center"
        android:textSize="35sp"

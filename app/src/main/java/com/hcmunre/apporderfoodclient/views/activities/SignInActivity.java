@@ -23,12 +23,10 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hcmunre.apporderfoodclient.R;
-import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Common.CommonClass;
 import com.hcmunre.apporderfoodclient.models.Database.DataConnetion;
 import com.hcmunre.apporderfoodclient.models.Database.SignInData;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
-
 
 import java.sql.Connection;
 import java.util.Arrays;
@@ -36,7 +34,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.paperdb.Paper;
 
 public class SignInActivity extends AppCompatActivity {
     private static final int API_REQUEST_CODE = 1234;
@@ -47,7 +44,7 @@ public class SignInActivity extends AppCompatActivity {
     DataConnetion dataCon = new DataConnetion();
     @BindView(R.id.btnSignIn)
     Button btnSigin;
-    @BindView(R.id.btnLoginPhone)
+//    @BindView(R.id.btnLoginPhone)
     Button btnLoginPhone;
     @BindView(R.id.editEmail)
     EditText editEmail;
@@ -69,7 +66,9 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
+        btnLoginPhone=findViewById(R.id.btnLoginPhone);
         init();
+
 
     }
 
@@ -82,6 +81,7 @@ public class SignInActivity extends AppCompatActivity {
         });
         listenClickSignup();
         listenClickForgetPass();
+        loginWithPhone();
         PreferenceUtils utils = new PreferenceUtils();
 
         if (utils.getEmail(this) != null) {
@@ -90,24 +90,30 @@ public class SignInActivity extends AppCompatActivity {
         } else {
 
         }
-        providers= Arrays.asList(new AuthUI.IdpConfig.PhoneBuilder().build());
-        firebaseAuth= FirebaseAuth.getInstance();
-        authStateListener=firebaseAuth1 -> {
-            FirebaseUser user=firebaseAuth1.getCurrentUser();
-            if(user!=null){
-                //save FBID
-                Paper.book().write(Common.REMEMBER_FBID,user.getUid());
-            }else {
-                loginPhone();
-            }
-        };
     }
-
+    private void loginWithPhone(){
+        btnLoginPhone.setOnClickListener(view -> {
+            List<AuthUI.IdpConfig> providers = Arrays.asList(
+                    new AuthUI.IdpConfig.PhoneBuilder().build());
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                startActivity(new Intent(SignInActivity.this, HomeActivity.class));
+                finish();
+            } else {
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(providers)
+                                .build(),
+                        API_REQUEST_CODE);
+            }
+        });
+    }
     private void listenClickSignup() {
         txtSignup.setOnClickListener(view -> {
             Intent i = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(i);
             finish();
+
         });
     }
 
@@ -115,15 +121,6 @@ public class SignInActivity extends AppCompatActivity {
         txtForgetPass.setOnClickListener(view -> {
             Intent intent = new Intent(SignInActivity.this, ForgetPassActivity.class);
             startActivity(intent);
-        });
-    }
-    private void loginPhone(){
-        btnLoginPhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
-                .setAvailableProviders(providers).build(),API_REQUEST_CODE);
-            }
         });
     }
     public class CheckLogin extends AsyncTask<String, String, String>//<params:giá trị truyền vào phần xử lý logic,progress,result>
@@ -162,7 +159,6 @@ public class SignInActivity extends AppCompatActivity {
             }
         }
 
-        //đây là luồng bên ngoài để xử lý logic
         @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... params)//...mảng dạng array
@@ -185,15 +181,22 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==API_REQUEST_CODE){
-            IdpResponse response= IdpResponse.fromResultIntent(data);
-            if(resultCode==RESULT_OK){
-                FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();//call listener onchange
-            }else {
+        if (requestCode == API_REQUEST_CODE) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                if(!FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber().isEmpty()){
+                    Intent i = new Intent(SignInActivity.this, HomeActivity.class);
+                    startActivity(i);
+                    finish();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                }else{
+                    Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
                 Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
             }
-            dialog.show();
-
         }
     }
 }

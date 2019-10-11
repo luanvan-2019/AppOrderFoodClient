@@ -18,16 +18,14 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-import io.reactivex.disposables.CompositeDisposable;
 
 public class SplashScreenActivity extends AppCompatActivity {
     TextView txtsaigonfood;
     Typeface face;
-    CompositeDisposable compositeDisposable =new CompositeDisposable();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splashscreen);
         init();
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -57,7 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .check();
     }
     private void init(){
-        txtsaigonfood = findViewById(R.id.txtSaigonfood);
+        txtsaigonfood = findViewById(R.id.txtLogo);
         face = Typeface.createFromAsset(getAssets(),
                 "fonts/fontsplash.ttf");
         txtsaigonfood.setTypeface(face);
