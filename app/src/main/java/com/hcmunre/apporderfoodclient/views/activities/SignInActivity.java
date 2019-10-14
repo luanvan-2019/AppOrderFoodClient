@@ -23,6 +23,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hcmunre.apporderfoodclient.R;
+import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Common.CommonClass;
 import com.hcmunre.apporderfoodclient.models.Database.DataConnetion;
 import com.hcmunre.apporderfoodclient.models.Database.SignInData;
@@ -153,6 +154,7 @@ public class SignInActivity extends AppCompatActivity {
                 PreferenceUtils.saveEmail(usernam, SignInActivity.this);
                 PreferenceUtils.savePassword(passwordd, SignInActivity.this);
                 Intent i = new Intent(SignInActivity.this, HomeActivity.class);
+                i.putExtra(Common.KEY_USER,usernam);
                 startActivity(i);
                 finish();
 
@@ -171,13 +173,12 @@ public class SignInActivity extends AppCompatActivity {
                 user = new User();
                 user.setmEmail(usernam);
                 user.setmPassword(passwordd);
-                z = userModel.DangNhap(user);
+                z = userModel.loginUser(user);
 
             }
             return z;
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

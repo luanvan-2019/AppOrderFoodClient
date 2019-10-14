@@ -11,8 +11,8 @@ import com.hcmunre.apporderfoodclient.models.Entity.User;
 public class Common {
     public static User currentUser;
     public static Restaurant currentRestaurant;
-    public static Restaurant arraylists;
-    public static ListMenu listMenu;
+    public static final String KEY_USER="data_user";
+    public static final String KEY_RESTAURANT="data_restaurant";
     public static  final String REMEMBER_FBID="FBID";
     public static boolean isConnectedToInternet(Context context){
 

@@ -62,17 +62,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/testing"/>
-
             <include
                 layout="@layout/recyclerview_listmenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <include layout="@layout/fragment_allfood"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
     </LinearLayout>
 
 

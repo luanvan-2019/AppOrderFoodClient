@@ -1,5 +1,6 @@
 package com.hcmunre.apporderfoodclient.models.Database;
 
+import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Common.HashPass;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
 
@@ -12,7 +13,7 @@ public class SignInData {
     DataConnetion dataCon = new DataConnetion();
     String z = "";
 //    boolean isSuccess=false;
-    public String DangNhap(User user) {
+    public String loginUser(User user) {
         try {
             con = dataCon.connectionData();
             if (con == null) {
@@ -22,6 +23,10 @@ public class SignInData {
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
+                    Common.currentUser.setId(rs.getInt("Id"));
+                    Common.currentUser.setmName(rs.getString("Name"));
+                    Common.currentUser.setmAddress(rs.getString("Address"));
+                    Common.currentUser.setmPhone(rs.getString("Phone"));
                     z = "success";
                     con.close();
                 } else {

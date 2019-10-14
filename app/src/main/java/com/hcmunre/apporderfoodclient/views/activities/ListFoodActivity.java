@@ -1,12 +1,15 @@
 package com.hcmunre.apporderfoodclient.views.activities;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,26 +17,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.models.Database.FoodData;
 import com.hcmunre.apporderfoodclient.models.Entity.Food;
-import com.hcmunre.apporderfoodclient.models.Entity.Menu;
+import com.hcmunre.apporderfoodclient.models.eventbus.FoodListEvent;
 import com.hcmunre.apporderfoodclient.views.adapters.FoodAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ListFoodActivity extends AppCompatActivity {
     @BindView(R.id.recyc_listFood)
     RecyclerView recyclerView;
-    @BindView(R.id.txtNameMenuRes)
-    TextView txtNameMenuRes;
-    @BindView(R.id.linearonclick)
-    public LinearLayout txtorder;
-    @BindView(R.id.txtCountFood_Order)
-    public TextView txtCountFood_Order;
-    @BindView(R.id.txtTotalPrice)
-    public TextView txtTotalPrice;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    CompositeDisposable compositeDisposable;
+    ProgressDialog progressDialog;
+    FoodAdapter adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,34 +55,60 @@ public class ListFoodActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        listFoodOfMenu();
-        getIntentMenu();
-        listenOnClick();
     }
-    private void listenOnClick() {
-        txtorder.setOnClickListener(view -> {
-            Intent intent = new Intent(ListFoodActivity.this, DetailOrderActivity.class);
-            startActivity(intent);
-
-        });
-    }
-    private void listFoodOfMenu(){
-        Intent intent=getIntent();
-        Menu menu = (Menu) intent.getSerializableExtra("dataMenu");
-        ArrayList<Food> foods=new ArrayList<>();
-        FoodData foodData=new FoodData();
-        try {
-            foods=foodData.getFoodOfMenu(menu.getmId());
-        } catch (SQLException e) {
-            e.printStackTrace();
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.clear();
+        if(adapter!=null){
+            adapter.onStop();
         }
-        FoodAdapter adapter=new FoodAdapter(foods,ListFoodActivity.this);
-        recyclerView.setAdapter(adapter);
+        super.onDestroy();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
-    private void getIntentMenu() {
-        Intent intent = getIntent();
-        Menu menu = (Menu) intent.getSerializableExtra("dataMenu");
-        txtNameMenuRes.setText(menu.getmName());
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
+    public void listFoodOfMenu(FoodListEvent event){
+        if (event.isSuccess()){
+            FoodData foodData=new FoodData();
+            toolbar.setTitle(event.getCategory().getmName());
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+            try {
+                progressDialog=new ProgressDialog(this);
+                compositeDisposable = new CompositeDisposable();
+                progressDialog.show();
+                final Observable<ArrayList<Food>> listFood=Observable.just(foodData.getFoodOfMenu(event.getCategory().getmId()));
+                compositeDisposable.add(listFood
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(foods -> {
+                            adapter=new FoodAdapter(foods,ListFoodActivity.this);
+                            recyclerView.setAdapter(adapter);
+                            progressDialog.dismiss();
+                        },throwable -> {
+                            Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        }));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

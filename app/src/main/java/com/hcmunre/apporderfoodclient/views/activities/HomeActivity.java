@@ -2,6 +2,8 @@ package com.hcmunre.apporderfoodclient.views.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +18,12 @@ import com.hcmunre.apporderfoodclient.views.fragments.HomeFragment;
 import com.hcmunre.apporderfoodclient.views.fragments.OrderFragment;
 
 public class HomeActivity extends AppCompatActivity {
+    ProgressBar progress;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(nav);
         if (savedInstanceState == null) {
@@ -31,27 +34,24 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener nav =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    Fragment selectedFragment = null;
-                    switch (menuItem.getItemId()) {
-                        case R.id.nav_hơme:
-                            selectedFragment = new HomeFragment();
+            menuItem -> {
+                Fragment selectedFragment = null;
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_hơme:
+                        selectedFragment = new HomeFragment();
 
-                            break;
-                        case R.id.nav_assignment:
-                            selectedFragment = new OrderFragment();
-                            break;
-                        case R.id.nav_favorites:
-                            selectedFragment = new FravoriteFragment();
-                            break;
-                        case R.id.nav_user:
-                            selectedFragment = new AccountFragment();
-                            break;
-                    }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                    return true;
+                        break;
+                    case R.id.nav_assignment:
+                        selectedFragment = new OrderFragment();
+                        break;
+                    case R.id.nav_favorites:
+                        selectedFragment = new FravoriteFragment();
+                        break;
+                    case R.id.nav_user:
+                        selectedFragment = new AccountFragment();
+                        break;
                 }
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                return true;
             };
 }

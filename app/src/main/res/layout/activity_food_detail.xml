@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".views.activities.DetailRestaurantActivity">
+    tools:context=".views.activities.MenuRestaurantActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -32,11 +32,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="?attr/homeAsUpIndicator"
                 app:layout_collapseMode="pin">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_arrow_back"/>
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -50,12 +47,11 @@
         app:layout_anchorGravity="bottom|end"
         app:backgroundTint="#f05421"
         android:src="@drawable/ic_favorites"/>
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".views.activities.DetailRestaurantActivity">
+        tools:context=".views.activities.MenuRestaurantActivity">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -216,4 +212,25 @@
                 </LinearLayout>
             </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
+    <FrameLayout
+        android:layout_gravity="bottom|end"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content">
+
+        <com.nex3z.notificationbadge.NotificationBadge
+            android:id="@+id/badge_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_gravity="right|top"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/cartSystem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/app_bar"
+            android:layout_margin="@dimen/fui_body_padding_bottom"
+            app:backgroundTint="#EEEEEE"
+            android:src="@drawable/ic_shopping_cart"/>
+    </FrameLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

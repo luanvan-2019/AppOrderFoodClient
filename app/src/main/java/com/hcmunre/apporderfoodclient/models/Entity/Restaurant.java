@@ -6,7 +6,7 @@ import java.sql.Time;
 public class Restaurant implements Serializable {
     private int mId;
     private String mName,mAddress,mPhone;
-    private Float mLat,mLng;
+    private Double mLat,mLng;
     private String mImage;
     private Time Opening_Closing_Time;
     private String UserOwner;
@@ -17,7 +17,7 @@ public class Restaurant implements Serializable {
     public Restaurant() {
     }
 
-    public Restaurant(int mId, String mName, String mAddress, String mPhone, Float mLat, Float mLng,String mImage, Time opening_Closing_Time, String userOwner) {
+    public Restaurant(int mId, String mName, String mAddress, String mPhone, Double mLat, Double mLng,String mImage, Time opening_Closing_Time, String userOwner) {
         this.mId = mId;
         this.mName = mName;
         this.mAddress = mAddress;
@@ -61,19 +61,19 @@ public class Restaurant implements Serializable {
         this.mPhone = mPhone;
     }
 
-    public Float getmLat() {
+    public Double getmLat() {
         return mLat;
     }
 
-    public void setmLat(Float mLat) {
+    public void setmLat(Double mLat) {
         this.mLat = mLat;
     }
 
-    public Float getmLng() {
+    public Double getmLng() {
         return mLng;
     }
 
-    public void setmLng(Float mLng) {
+    public void setmLng(Double mLng) {
         this.mLng = mLng;
     }
 

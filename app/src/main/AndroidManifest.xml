@@ -7,10 +7,18 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.activities.SplashScreenActivity">
+        <activity android:name=".views.activities.NearbyRestaurantActivity"></activity>
+        <activity android:name=".views.activities.CartListActivity" />
+        <activity android:name=".views.activities.TrackingOrderActivity" />
+        <activity android:name=".views.activities.DetailOrderActivity" />
+        <activity
+            android:name=".views.activities.SplashScreenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,29 +36,31 @@
         <activity
             android:name=".views.activities.HomeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".views.activities.TrackingOrderActivity" />
-        <activity android:name=".views.activities.DetailOrderActivity" />
         <activity android:name=".views.activities.SearchActivity" />
         <activity android:name=".views.activities.ForgetPassActivity" />
-        <activity android:name=".views.activities.DetailRestaurantActivity" />
+        <activity android:name=".views.activities.MenuRestaurantActivity" />
         <activity android:name=".views.activities.MapsActivity" />
         <activity android:name=".views.activities.ListFoodActivity" />
-        <activity android:name=".views.RegisterActivity" />
-        <activity android:name=".views.OtpActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" />
+
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/map_key" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <dist:module dist:instant="true" />
 
 </manifest>

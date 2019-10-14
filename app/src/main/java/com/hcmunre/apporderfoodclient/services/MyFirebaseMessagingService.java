@@ -1,5 +1,6 @@
 package com.hcmunre.apporderfoodclient.services;
 
+import android.annotation.SuppressLint;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -26,6 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onCreate();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onNewToken(String newToken) {
         super.onNewToken(newToken);
