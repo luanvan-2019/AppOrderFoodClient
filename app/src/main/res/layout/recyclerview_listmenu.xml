@@ -15,19 +15,11 @@
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Danh sách category"
+            android:text="Danh sách menu"
             android:fontFamily="@font/robotoregular"
             android:textSize="15sp"
             android:id="@+id/txtlisstmneu"/>
-        <TextView
-            android:layout_weight="1"
-            android:gravity="right"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cửa hàng gần tôi"
-            android:fontFamily="@font/robotoregular"
-            android:textSize="15sp"
-            android:id="@+id/txtNearbyRes"/>
+
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

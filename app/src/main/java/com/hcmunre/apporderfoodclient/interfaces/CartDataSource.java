@@ -1,5 +1,6 @@
 package com.hcmunre.apporderfoodclient.interfaces;
 
+import com.hcmunre.apporderfoodclient.models.Entity.AllCartItem;
 import com.hcmunre.apporderfoodclient.models.Entity.CartItem;
 
 import java.util.List;
@@ -10,6 +11,10 @@ import io.reactivex.Single;
 
 public interface CartDataSource {
     Flowable<List<CartItem>> getAllCart(String email, int restaurantId);
+
+    Flowable<List<AllCartItem>> getAllCartItem(String email);
+
+    Single<Long> sumPriceByRestaurant(String email);
 
     Single<Integer> countItemInCart(String email, int restaurantId);
 

@@ -1,6 +1,9 @@
 package com.hcmunre.apporderfoodclient.views.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +27,10 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,12 +60,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.ViewHolder holder, int position) {
         CartItem cartItem=cartItems.get(position);
-        Picasso.get().load(cartItem.getFoodImage()).into(holder.img_food);
+        byte[] decodeString= Base64.decode(cartItem.getFoodImage(),Base64.DEFAULT);
+        Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+        holder.img_food.setImageBitmap(decodeImage);
         holder.txt_food_name.setText(cartItem.getFoodName());
-        holder.txt_food_price.setText(String.valueOf(cartItem.getFoodPrice()));
+        holder.txt_food_price.setText(String.valueOf(holder.currencyVN.format(cartItem.getFoodPrice())));
         holder.txtQuantity.setText(String.valueOf(cartItem.getFoodQuantity()));
         Float result=cartItem.getFoodPrice()*cartItem.getFoodQuantity();
-        holder.txtTotalPrice.setText(String.valueOf(result));
+        holder.txtTotalPrice.setText(String.valueOf(holder.currencyVN.format(result)));
         holder.setCartOnClickListener((view, position1, isMinus, isDelete) -> {
             if(!isDelete){
                 //NẾU không có button delete
@@ -145,7 +152,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         @BindView(R.id.img_food)
         ImageView img_food;
         ImageOnClickListener cartOnClickListener;
-
+        Locale locale=new Locale("vi","VN");
+        NumberFormat currencyVN=NumberFormat.getCurrencyInstance(locale);
         public void setCartOnClickListener(ImageOnClickListener cartOnClickListener) {
             this.cartOnClickListener = cartOnClickListener;
         }

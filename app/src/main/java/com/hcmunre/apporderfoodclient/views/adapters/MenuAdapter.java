@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.models.Entity.Menu;
 import com.hcmunre.apporderfoodclient.models.eventbus.FoodListEvent;
-import com.hcmunre.apporderfoodclient.views.activities.ListFoodActivity;
+import com.hcmunre.apporderfoodclient.views.activities.FoodActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -48,11 +48,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(mContext, ListFoodActivity.class);
+//                Intent intent = new Intent(mContext, FoodActivity.class);
 //                intent.putExtra("dataMenu", menu);
 //                mContext.startActivity(intent);
                 EventBus.getDefault().postSticky(new FoodListEvent(true,menu));
-                mContext.startActivity(new Intent(mContext, ListFoodActivity.class));
+                mContext.startActivity(new Intent(mContext, FoodActivity.class));
             }
         });
     }

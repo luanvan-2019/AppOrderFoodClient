@@ -2,7 +2,9 @@ package com.hcmunre.apporderfoodclient.models.Database;
 
 import com.hcmunre.apporderfoodclient.models.Entity.Token;
 import com.hcmunre.apporderfoodclient.models.Entity.TokenModel;
+import com.hcmunre.apporderfoodclient.models.Entity.User;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ public class TokenData {
     DataConnetion dataConnetion=new DataConnetion();
     ResultSet rs;
     PreparedStatement pst;
+    CallableStatement callable;
     public void getToken(String fbid){
         try {
             String sql="Exec Sp_SelectToken '"+fbid+"'";
@@ -44,24 +47,37 @@ public class TokenData {
         }
         return updateTokenToServer(fbid,token);
     }
-    public ArrayList<Token> updateTokenToServer1(String fbid, String token){
-        ArrayList<Token> tokens=new ArrayList<>();
+    public int updateTokenToServer1(Token token){
+        int res=0;
         try {
-            String sql="Exec Sp_InsertToken '"+fbid+"','"+token+"'";
+            String sql="{call Sp_InsertToken (?,?)}";
+            con=dataConnetion.connectionData();
+            callable = con.prepareCall(sql);
+            callable.setString(1, token.getFBID());
+            callable.setString(2, token.getToKen());
+            res=callable.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+    public ArrayList<User> getUser(String fbid){
+        ArrayList<User> users=new ArrayList<>();
+        try {
+            String sql="Exec Sp_SelectUserFBID '"+fbid+"'";
             con=dataConnetion.connectionData();
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
-            Token token1;
+            User user;
             if(rs.next()){
-                token1=new Token();
-                token1.setFBID(rs.getString("FBID"));
-                token1.setToKen(rs.getString("Token"));
-                tokens.add(token1);
+                user=new User();
+                user.setFbid(rs.getString("FBID"));
+                users.add(user);
                 con.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return tokens;
+        return users;
     }
 }

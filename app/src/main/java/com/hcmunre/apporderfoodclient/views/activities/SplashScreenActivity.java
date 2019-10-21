@@ -6,55 +6,57 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.hcmunre.apporderfoodclient.R;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import java.util.List;
+
+import io.paperdb.Paper;
+import io.reactivex.disposables.CompositeDisposable;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
     TextView txtsaigonfood;
     Typeface face;
+    CompositeDisposable compositeDisposable=new CompositeDisposable();
+    private FirebaseAuth.AuthStateListener authStateListener;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
         init();
         Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
+                .withPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE})
+                .withListener(new MultiplePermissionsListener() {
                     @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        int secondsDelayed = 1;
-                        new Handler().postDelayed(new Runnable() {
-                            public void run() {
-                                startActivity(new Intent(SplashScreenActivity.this, SignInActivity.class));
-                                finish();
-                            }
-                        }, secondsDelayed * 3000);
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            int secondsDelayed = 1;
+                            new Handler().postDelayed(new Runnable() {
+                                public void run() {
+                                    startActivity(new Intent(SplashScreenActivity.this, SignInActivity.class));
+                                    finish();
+                                }
+                            }, secondsDelayed * 2000);
+                        }
                     }
 
                     @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(SplashScreenActivity.this, "Bạn phải bật permission để sử dụng ứng dụng", Toast.LENGTH_SHORT).show();
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
 
                     }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                })
-                .check();
+                }).check();
     }
     private void init(){
+        Paper.init(this);
         txtsaigonfood = findViewById(R.id.txtLogo);
         face = Typeface.createFromAsset(getAssets(),
                 "fonts/fontsplash.ttf");

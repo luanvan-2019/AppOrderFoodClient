@@ -22,6 +22,16 @@ public class LocalCartDataSource implements CartDataSource {
     }
 
     @Override
+    public Flowable<List<AllCartItem>> getAllCartItem(String email) {
+        return cartDAO.getAllCartItem(email);
+    }
+
+    @Override
+    public Single<Long> sumPriceByRestaurant(String email) {
+        return cartDAO.sumPriceByRestaurant(email);
+    }
+
+    @Override
     public Single<Integer> countItemInCart(String email, int restaurantId) {
         return cartDAO.countItemInCart(email, restaurantId);
     }

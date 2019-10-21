@@ -3,6 +3,9 @@ package com.hcmunre.apporderfoodclient.views.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,12 +69,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         holder.itemView.setTag(position);
         holder.txtitem_name.setText(food.getName());
         holder.txtitem_price.setText(holder.currencyVN.format(food.getPrice()));
-//        holder.img_food.setImageResource(food.getImage());
+        byte[] decodeString= Base64.decode(food.getImage(),Base64.DEFAULT);
+        Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+        holder.img_food.setImageBitmap(decodeImage);
         holder.setListerner((view, position1) -> {
             //tạo cart
             CartItem cartItem=new CartItem();
             cartItem.setFoodId(food.getId());
             cartItem.setFoodName(food.getName());
+            cartItem.setFoodImage(food.getImage());
             cartItem.setFoodPrice(food.getPrice());
             cartItem.setFoodQuantity(1);
             cartItem.setEmail(PreferenceUtils.getEmail(activity));
@@ -81,7 +87,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(()->{
-                                        Toast.makeText(activity, "Đã thêm vào giỏ hàng "+food.getId(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Đã thêm vào giỏ hàng "+food.getName(), Toast.LENGTH_SHORT).show();
                                     },
                                     throwable -> {
                                         Toast.makeText(activity, "[THÊM VÀO GIỎ]"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
@@ -109,7 +115,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         LinearLayout btnAddCart;
         @BindView(R.id.llMinus)
         LinearLayout llMinus;
-        int quantity;
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         cartClickListerner listerner;

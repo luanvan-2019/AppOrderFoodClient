@@ -10,6 +10,8 @@ import com.hcmunre.apporderfoodclient.models.Database.TokenData;
 import com.hcmunre.apporderfoodclient.models.Entity.Token;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
 
 import io.paperdb.Paper;
 import io.reactivex.Observable;
@@ -33,24 +35,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onNewToken(newToken);
         //ở đây sẽ cập nhật token,để update chúng ta cần fbid
         String fbid=Paper.book().read(Common.REMEMBER_FBID);
-        Observable<ArrayList<Token>> list=Observable.just(tokenData.updateTokenToServer1(fbid,newToken));
-        list
+        Token token=new Token();
+        token.setFBID(fbid);
+        token.setToKen(newToken);
+        Observable<Integer> listToken=Observable.just(tokenData.updateTokenToServer1(token));
+        compositeDisposable.add(
+                listToken
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(tokens -> {
-
+                .subscribe(tokenModel->{
+                    //
                 },throwable -> {
-                    Toast.makeText(this, "[REQUEST TOKEN]"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-//        compositeDisposable.add(tokenData.updateTokenToServer(fbid,newToken)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(tokenModel->{
-//                    //
-//                },throwable -> {
-//                    Toast.makeText(this, "[REQUEST TOKEN]"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
-//                })
-//        );
+                    Toast.makeText(this, "[REFRESH TOKEN]"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                })
+        );
 
 
     }
@@ -64,5 +62,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        Map<String,String> dataRecv=remoteMessage.getData();
+        if(dataRecv!=null){
+            Common.showNotifacation(
+                    this,
+                    new Random().nextInt(),
+                    dataRecv.get(Common.NOTIFI_TITLE),
+                    dataRecv.get(Common.NOTIFI_CONTENT),
+                    null
+            );
+        }
+        //sử dụng ARC đẻ test
     }
 }

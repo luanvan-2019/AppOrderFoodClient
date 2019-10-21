@@ -91,5 +91,24 @@ public class RestaurantData {
         }
         return restaurants;
     }
+    public ArrayList<Restaurant> getRestaurantById(String id){
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        try {
+            String sql="Exec Sp_SelectRestaurantbyId '"+Integer.parseInt(id)+"'";
+            con=dataCon.connectionData();
+            pst=con.prepareStatement(sql);
+            rs=pst.executeQuery();
+            Restaurant restaurant;
+            if(rs.next()){
+                restaurant = new Restaurant();
+                restaurant.setmId(rs.getInt("Id"));
+                restaurants.add(restaurant);
+                con.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return restaurants;
+    }
 
 }

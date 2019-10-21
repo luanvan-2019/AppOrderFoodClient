@@ -7,8 +7,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Cart")
 public class CartItem {
-    @PrimaryKey
     @NonNull
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name="id")
+    private int id;
     @ColumnInfo(name = "foodId")
     private int foodId;
     @ColumnInfo(name = "foodName")
@@ -19,12 +21,21 @@ public class CartItem {
     private Float foodPrice;
     @ColumnInfo(name = "foodQuantity")
     private int foodQuantity;
+
     @ColumnInfo(name = "email")
     private String email;
     @ColumnInfo(name = "restaurantId")
     private int restaurantId;
 
     public CartItem() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getFoodId() {

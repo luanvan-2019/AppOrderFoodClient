@@ -7,13 +7,14 @@ public class User implements Serializable {
     private String mName;
     private String mAddress;
     private String mPhone;
-    private byte[] mImage;
+    private String mImage;
     private String mEmail;
     private String mPassword;
+    private String fbid;
     public User(){
     }
 
-    public User(String mName, String mAddress, String mPhone, byte[] mImage, String mEmail, String mPassword) {
+    public User(String mName, String mAddress, String mPhone, String mImage, String mEmail, String mPassword) {
         this.mName = mName;
         this.mAddress = mAddress;
         this.mPhone = mPhone;
@@ -54,11 +55,11 @@ public class User implements Serializable {
         this.mPhone = mPhone;
     }
 
-    public byte[] getmImage() {
+    public String getmImage() {
         return mImage;
     }
 
-    public void setmImage(byte[] mImage) {
+    public void setmImage(String mImage) {
         this.mImage = mImage;
     }
 
@@ -76,5 +77,13 @@ public class User implements Serializable {
 
     public void setmPassword(String mPassword) {
         this.mPassword = mPassword;
+    }
+
+    public String getFbid() {
+        return fbid;
+    }
+
+    public void setFbid(String fbid) {
+        this.fbid = fbid;
     }
 }

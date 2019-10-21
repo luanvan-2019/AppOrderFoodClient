@@ -1,13 +1,15 @@
 package com.hcmunre.apporderfoodclient.views.activities;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -23,22 +25,24 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Database.RestaurantData;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
+import com.hcmunre.apporderfoodclient.models.eventbus.MenuItemEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class NearbyRestaurantActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -157,8 +161,34 @@ public class NearbyRestaurantActivity extends AppCompatActivity implements OnMap
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        try {
+            boolean success=googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this,R.raw.map_style));
+            if (!success){
+                Log.d("ERROR_MAP","Load stype error");
+            }
+        }catch(Resources.NotFoundException e){
+            Log.d("ERROR_MAP","Resource not found");
+        }
+        map.setOnInfoWindowClickListener(marker -> {
+            String id=marker.getTitle().substring(0,marker.getTitle().indexOf("."));
+            if(!TextUtils.isEmpty(id)){
+                restaurantData=new RestaurantData();
+                Observable<ArrayList<Restaurant>> listRestaurntById=Observable.just(restaurantData.getRestaurantById(id));
+                compositeDisposable.add(
+                        listRestaurntById
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(restaurants -> {
+                            Common.currentRestaurant=restaurants.get(0);
+                            EventBus.getDefault().postSticky(new MenuItemEvent(true,Common.currentRestaurant));
+                            startActivity(new Intent(NearbyRestaurantActivity.this, MenuActivity.class));
+                            finish();
+                        },throwable -> {
+                            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+                        })
+                );
+            }
+        });
     }
 }

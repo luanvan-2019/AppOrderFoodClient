@@ -18,7 +18,6 @@ import com.hcmunre.apporderfoodclient.views.fragments.HomeFragment;
 import com.hcmunre.apporderfoodclient.views.fragments.OrderFragment;
 
 public class HomeActivity extends AppCompatActivity {
-    ProgressBar progress;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginTop="30dp"
-        android:src="@drawable/delivery" />
+        android:src="@drawable/app_icon" />
 
     <TextView
         android:id="@+id/signin"

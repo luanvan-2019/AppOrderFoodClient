@@ -12,18 +12,13 @@
         app:navigationIcon="?attr/homeAsUpIndicator">
 
     </androidx.appcompat.widget.Toolbar>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_order"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@id/toolbar"
+        android:id="@+id/recyc_order"
+        android:background="@color/white"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyc_order"
-            android:background="@color/white"
-            android:scrollbars="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_height="wrap_content"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +37,7 @@
                 <TextView
                     android:fontFamily="@font/robotoregular"
                     android:text="Tổng giá :"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textColor="@color/colorPrimary"
                     android:layout_weight="4"
                     android:layout_width="0dp"
@@ -51,7 +46,7 @@
                     android:id="@+id/txtTotalPrice"
                     android:fontFamily="@font/robotoregular"
                     android:text="0"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:layout_weight="4"
                     android:gravity="right"
                     android:layout_width="0dp"
@@ -61,7 +56,7 @@
         <Button
             android:id="@+id/btnOrder"
             android:layout_marginTop="8dp"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textSize="20dp"
             android:fontFamily="@font/robotoregular"
             android:textColor="@color/colorWhite"

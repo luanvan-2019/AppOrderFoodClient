@@ -55,8 +55,6 @@ public class HomeFragment extends Fragment{
     LinearLayout layout_search;
     @BindView(R.id.txtsearch)
     TextView txtsearch;
-    @BindView(R.id.txtcount_restaurant)
-    TextView txtcount_restaurant;
     @BindView(R.id.txtNearbyRes)
     TextView txtNearbyRes;
     @BindView(R.id.recyc_listmenu)
@@ -154,7 +152,6 @@ public class HomeFragment extends Fragment{
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(restaurant->{
                         restaurantAdapter=new RestaurantAdapter(getActivity(),restaurant);
-                        txtcount_restaurant.setText(restaurantAdapter.getItemCount()+"");
                         recyc_listRestaurant.setAdapter(restaurantAdapter);
                         progress_loading.setVisibility(View.GONE);
                     },throwable -> {

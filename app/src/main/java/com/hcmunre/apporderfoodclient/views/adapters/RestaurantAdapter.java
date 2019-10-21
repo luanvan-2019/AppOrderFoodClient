@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
-import com.hcmunre.apporderfoodclient.views.activities.MenuRestaurantActivity;
+import com.hcmunre.apporderfoodclient.models.eventbus.MenuItemEvent;
+import com.hcmunre.apporderfoodclient.views.activities.MenuActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -52,9 +54,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         holder.imageRes.setImageBitmap(decodebitmap);
         holder.itemView.setOnClickListener(view -> {
             Common.currentRestaurant = restaurantArrayList.get(position);
-            Intent intent = new Intent(mContext, MenuRestaurantActivity.class);
-            intent.putExtra(Common.KEY_RESTAURANT, Common.currentRestaurant);
-            mContext.startActivity(intent);
+            EventBus.getDefault().postSticky(new MenuItemEvent(true,Common.currentRestaurant));
+            mContext.startActivity(new Intent(mContext, MenuActivity.class));
+//            Intent intent = new Intent(mContext, MenuActivity.class);
+//            intent.putExtra(Common.KEY_RESTAURANT, Common.currentRestaurant);
+//            mContext.startActivity(intent);
 
         });
 

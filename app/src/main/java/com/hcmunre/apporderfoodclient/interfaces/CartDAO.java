@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.hcmunre.apporderfoodclient.models.Entity.AllCartItem;
 import com.hcmunre.apporderfoodclient.models.Entity.CartItem;
 
 import java.util.List;
@@ -19,6 +20,14 @@ public interface CartDAO {
     @Query("SELECT * FROM Cart WHERE email=:email AND restaurantId=:restaurantId")
     Flowable<List<CartItem>> getAllCart(String email, int restaurantId);
 
+    @Query("SELECT SUM(foodPrice*foodQuantity) FROM Cart " +
+            "WHERE email=:email " +
+            "GROUP BY restaurantId")
+    Single<Long> sumPriceByRestaurant(String email);
+    //
+    @Query("SELECT restaurantId,SUM(foodPrice*foodQuantity) AS totalPrice,COUNT(foodId) AS totalItem  FROM Cart WHERE email=:email GROUP BY restaurantId")
+    Flowable<List<AllCartItem>> getAllCartItem(String email);
+    //
     @Query("SELECT COUNT(*) FROM Cart WHERE email=:email AND restaurantId=:restaurantId")
     Single<Integer> countItemInCart(String email,int restaurantId);
 

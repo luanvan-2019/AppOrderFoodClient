@@ -23,10 +23,12 @@ public class SignInData {
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
                 if (rs.next()) {
+                    Common.currentUser=new User();
                     Common.currentUser.setId(rs.getInt("Id"));
                     Common.currentUser.setmName(rs.getString("Name"));
                     Common.currentUser.setmAddress(rs.getString("Address"));
                     Common.currentUser.setmPhone(rs.getString("Phone"));
+                    Common.currentUser.setmImage(rs.getString("Image"));
                     z = "success";
                     con.close();
                 } else {

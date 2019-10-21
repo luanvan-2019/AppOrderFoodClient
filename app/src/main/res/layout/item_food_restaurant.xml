@@ -36,6 +36,16 @@
                 android:text="Canh bún"
                 android:textColor="#262628"
                 android:textSize="15sp" />
+            <TextView
+                android:layout_marginTop="6dp"
+                android:textColor="#9b9b9b"
+                android:textSize="10sp"
+                android:text=""
+                android:inputType="textMultiLine"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtdescription"/>
 
             <TextView
                 android:id="@+id/txtitem_price"
@@ -97,7 +107,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/plus_button"
+                    android:src="@drawable/ic_shopping_cart"
                     android:layout_gravity="center"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp" />

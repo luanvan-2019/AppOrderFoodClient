@@ -2,6 +2,7 @@
     <string name="app_name">SaiGonFood</string>
     <string name="search">Tìm kiếm</string>
     <string name="map_key" translatable="false">AIzaSyAr2eaeOVAX2s3m-Poyxjxea9f3S6ptrKk</string>
+
     <string name="title_activity_maps">Map</string>
 
 </resources>

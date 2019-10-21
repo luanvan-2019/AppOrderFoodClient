@@ -28,6 +28,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -46,6 +49,8 @@ public class CartListActivity extends AppCompatActivity {
     Button btnOrder;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    Locale localeVN;
+    NumberFormat currencyVN;
     CompositeDisposable compositeDisposable;
     CartDataSource cartDataSource;
     @Override
@@ -60,11 +65,14 @@ public class CartListActivity extends AppCompatActivity {
         recyc_order.setLayoutManager(layoutManager);
         recyc_order.setItemAnimator(new DefaultItemAnimator());
         //toolbar
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle("Giỏ hàng");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Giỏ hàng");
 
+        //chuyển sang dạng tiền việt nam
+        localeVN = new Locale("vi", "VN");
+        currencyVN = NumberFormat.getInstance(localeVN);
         //
         compositeDisposable=new CompositeDisposable();
         cartDataSource=new LocalCartDataSource(CartData.getInstance(this).cartDAO());
@@ -119,7 +127,7 @@ public class CartListActivity extends AppCompatActivity {
                             btnOrder.setEnabled(true);
                             btnOrder.setBackgroundResource(R.color.colorPrimary);
                         }
-                        txtTotalPrice.setText(String.valueOf(aLong));
+                        txtTotalPrice.setText(String.valueOf(currencyVN.format(aLong)));
                     }
 
                     @Override
