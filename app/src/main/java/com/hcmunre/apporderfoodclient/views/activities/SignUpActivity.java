@@ -25,7 +25,6 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.editName) EditText editName;
     @BindView(R.id.editEmail) EditText editEmail;
     @BindView(R.id.editPassword) EditText editPassword;
-    @BindView(R.id.txtSignIn) TextView txtSignIn;
     String editNhapSdt, editNhapTen, editNhapEmail, editNhapMatkhau;
     User user;
     CommonClass commonClass = new CommonClass();
@@ -63,12 +62,6 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(SignUpActivity.this, "Đăng ký thất bại", Toast.LENGTH_LONG).show();
                     }
                 }
-            }
-        });
-        txtSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
             }
         });
     }

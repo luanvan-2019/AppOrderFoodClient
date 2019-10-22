@@ -54,7 +54,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+        <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -63,17 +63,22 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/testing"/>
             <include
+                android:id="@+id/recyc"
+                android:layout_below="@id/testing"
                 layout="@layout/recyclerview_listmenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <ProgressBar
-                android:id="@+id/progress_loading"
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress"/>
+            <include
+                android:layout_below="@id/recyc"
+                layout="@layout/fragment_allfood"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-            <include layout="@layout/fragment_allfood"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 

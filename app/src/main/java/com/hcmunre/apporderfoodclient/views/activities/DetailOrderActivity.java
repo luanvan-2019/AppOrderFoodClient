@@ -84,7 +84,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
         ButterKnife.bind(this);
-        String apiKey = "AIzaSyDJOu594DVSSbD9T2lc66yjY9SicGfUqOo";
+        String apiKey = "AIzaSyDb8vrfFWCuSNigtxvfM-zC-4MvNQlGIFQ";
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), apiKey);
         }

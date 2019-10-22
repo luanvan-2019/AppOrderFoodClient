@@ -1,6 +1,8 @@
 package com.hcmunre.apporderfoodclient.views.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
+import com.hcmunre.apporderfoodclient.commons.Progress;
 import com.hcmunre.apporderfoodclient.models.Database.OrderData;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.views.adapters.HistoryCartAdatper;
@@ -35,12 +38,11 @@ public class HistoryOrder extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.recyc_history_order)
     RecyclerView recyc_history_order;
-    @BindView(R.id.progress)
-    ProgressBar progress;
     @BindView(R.id.txt_order_history)
     TextView txt_order_history;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     OrderData orderData = new OrderData();
+    Progress progress = new Progress();
 
     @Nullable
     @Override
@@ -60,25 +62,29 @@ public class HistoryOrder extends Fragment {
 
     private void getAllOrder() {
         Observable<ArrayList<Order>> listOrderHistory = Observable.just(orderData.getAllOrder(Common.currentUser.getId()));
-        progress.setVisibility(View.VISIBLE);
         txt_order_history.setVisibility(View.GONE);
+        progress.showProgress(getActivity());
+        Handler handler = new Handler(Looper.myLooper());
         compositeDisposable.add(
                 listOrderHistory
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(orders -> {
-                            if(orders.size()>0){
-                                HistoryCartAdatper historyCartAdatper = new HistoryCartAdatper(getActivity(), orders);
-                                recyc_history_order.setAdapter(historyCartAdatper);
-                                progress.setVisibility(View.GONE);
-                                txt_order_history.setVisibility(View.GONE);
-                            }else{
-                                progress.setVisibility(View.GONE);
-                                txt_order_history.setVisibility(View.VISIBLE);
-                            }
+                            handler.postDelayed(() -> {
+                                if (orders.size() > 0) {
+                                    HistoryCartAdatper historyCartAdatper = new HistoryCartAdatper(getActivity(), orders);
+                                    recyc_history_order.setAdapter(historyCartAdatper);
+                                    txt_order_history.setVisibility(View.GONE);
+                                    progress.hideProgress();
+                                } else {
+                                    txt_order_history.setVisibility(View.VISIBLE);
+                                    progress.hideProgress();
+                                }
+                            }, 2000);
+
                         }, throwable -> {
-                            progress.setVisibility(View.GONE);
                             Toast.makeText(getActivity(), "Lỗi " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                            progress.hideProgress();
                         })
         );
     }

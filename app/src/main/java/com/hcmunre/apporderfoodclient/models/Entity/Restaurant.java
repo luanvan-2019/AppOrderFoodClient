@@ -8,25 +8,11 @@ public class Restaurant implements Serializable {
     private String mName,mAddress,mPhone;
     private Double mLat,mLng;
     private String mImage;
-    private Time Opening_Closing_Time;
     private String UserOwner;
-//    Integer mImage;
-//    String mName,mPrice;
+    private Time opening,closing;
 
 
     public Restaurant() {
-    }
-
-    public Restaurant(int mId, String mName, String mAddress, String mPhone, Double mLat, Double mLng,String mImage, Time opening_Closing_Time, String userOwner) {
-        this.mId = mId;
-        this.mName = mName;
-        this.mAddress = mAddress;
-        this.mPhone = mPhone;
-        this.mLat = mLat;
-        this.mLng = mLng;
-        this.mImage = mImage;
-        Opening_Closing_Time = opening_Closing_Time;
-        UserOwner = userOwner;
     }
 
     public int getmId() {
@@ -85,19 +71,27 @@ public class Restaurant implements Serializable {
         this.mImage = mImage;
     }
 
-    public Time getOpening_Closing_Time() {
-        return Opening_Closing_Time;
-    }
-
-    public void setOpening_Closing_Time(Time opening_Closing_Time) {
-        Opening_Closing_Time = opening_Closing_Time;
-    }
-
     public String getUserOwner() {
         return UserOwner;
     }
 
     public void setUserOwner(String userOwner) {
         UserOwner = userOwner;
+    }
+
+    public Time getOpening() {
+        return opening;
+    }
+
+    public void setOpening(Time opening) {
+        this.opening = opening;
+    }
+
+    public Time getClosing() {
+        return closing;
+    }
+
+    public void setClosing(Time closing) {
+        this.closing = closing;
     }
 }

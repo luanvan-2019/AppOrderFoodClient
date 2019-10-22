@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
+import com.hcmunre.apporderfoodclient.commons.Progress;
 import com.hcmunre.apporderfoodclient.interfaces.CartDataSource;
 import com.hcmunre.apporderfoodclient.models.Database.FoodData;
 import com.hcmunre.apporderfoodclient.models.Entity.CartData;
@@ -72,6 +74,7 @@ public class MenuActivity extends AppCompatActivity {
     Toolbar toolbar;
     CartDataSource cartDataSource;
     CompositeDisposable compositeDisposable;
+    Progress progress=new Progress();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,15 +172,21 @@ public class MenuActivity extends AppCompatActivity {
             compositeDisposable = new CompositeDisposable();
             FoodData foodData = new FoodData();
             final Observable<ArrayList<Menu>> listMenu=Observable.just(foodData.getMenuResFood(event.getRestaurant().getmId()));
+            Handler handler=new Handler();
+            progress.showProgress(this);
             compositeDisposable.add(
                     listMenu
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(menus -> {
-                                menuAdapter = new MenuAdapter(this, menus);
-                                txtCountMenu.setText(menuAdapter.getItemCount() + "");
-                                recyc_detailfood.setAdapter(menuAdapter);
-                                menuAdapter.notifyDataSetChanged();
+                                handler.postDelayed(() -> {
+                                    menuAdapter = new MenuAdapter(MenuActivity.this, menus);
+                                    txtCountMenu.setText(menuAdapter.getItemCount() + "");
+                                    recyc_detailfood.setAdapter(menuAdapter);
+                                    menuAdapter.notifyDataSetChanged();
+                                    progress.hideProgress();
+                                },1000);
+
                             },throwable -> {
                                 Toast.makeText(this, "Lỗi"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
                             })

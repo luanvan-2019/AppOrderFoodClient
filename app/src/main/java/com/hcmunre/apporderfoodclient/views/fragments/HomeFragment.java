@@ -2,8 +2,14 @@ package com.hcmunre.apporderfoodclient.views.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -26,6 +32,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hcmunre.apporderfoodclient.commons.Progress;
+import com.hcmunre.apporderfoodclient.models.Database.SignInData;
+import com.hcmunre.apporderfoodclient.views.activities.HomeActivity;
 import com.hcmunre.apporderfoodclient.views.activities.NearbyRestaurantActivity;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
@@ -35,12 +44,15 @@ import com.hcmunre.apporderfoodclient.models.Entity.ListMenu;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.models.Entity.Slider;
 import com.hcmunre.apporderfoodclient.viewmodels.RestaurantViewModel;
+import com.hcmunre.apporderfoodclient.views.activities.PreferenceUtils;
+import com.hcmunre.apporderfoodclient.views.activities.SignInActivity;
 import com.hcmunre.apporderfoodclient.views.adapters.HomePageAdapter;
 import com.hcmunre.apporderfoodclient.views.adapters.ListMenuAdapter;
 import com.hcmunre.apporderfoodclient.views.adapters.RestaurantAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +60,7 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment{
@@ -63,8 +76,8 @@ public class HomeFragment extends Fragment{
     RecyclerView recyc_listRestaurant;
     @BindView(R.id.testing)
     RecyclerView  testing;
-    @BindView(R.id.progress_loading)
-    ProgressBar progress_loading;
+    @BindView(R.id.progress)
+    ProgressBar progressBar;
     TextView  txtCountRestaurant;
     Unbinder unbinder;
     ListMenuAdapter listMenuAdapter;
@@ -78,6 +91,7 @@ public class HomeFragment extends Fragment{
     Dialog dialog;
     RecyclerView recyc_search;
     CompositeDisposable compositeDisposable;
+    Progress progress=new Progress();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,15 +114,25 @@ public class HomeFragment extends Fragment{
         testing.setAdapter(homePageAdapter);
         homePageAdapter.notifyDataSetChanged();
         getListMenuAdapter();
+        progressBar.setVisibility(View.GONE);
         try {
             getListRestaurant();
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
         init();
         return view;
     }
-
+    private void init(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyc_listRestaurant.setLayoutManager(layoutManager);
+        recyc_listRestaurant.setHasFixedSize(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyc_listRestaurant.getContext(), layoutManager.getOrientation());
+        recyc_listRestaurant.addItemDecoration(dividerItemDecoration);
+        txtNearbyRes.setOnClickListener(view -> {
+            startActivity(new Intent(getActivity(), NearbyRestaurantActivity.class));
+        });
+    }
     private void getListMenuAdapter() {
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -124,42 +148,59 @@ public class HomeFragment extends Fragment{
         listMenuAdapter = new ListMenuAdapter(getActivity(), listMenuArrayList);
         recyc_listmenu.setAdapter(listMenuAdapter);
     }
-    private void init(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyc_listRestaurant.setLayoutManager(layoutManager);
-        recyc_listRestaurant.setHasFixedSize(true);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyc_listRestaurant.getContext(), layoutManager.getOrientation());
-        recyc_listRestaurant.addItemDecoration(dividerItemDecoration);
-        txtNearbyRes.setOnClickListener(view -> {
-                startActivity(new Intent(getActivity(), NearbyRestaurantActivity.class));
-        });
-    }
+
     @Override
     public void onDestroy() {
         compositeDisposable.clear();
         super.onDestroy();
     }
-
     private void getListRestaurant() throws SQLException {
         RestaurantData rd=new RestaurantData();
         if(Common.isConnectedToInternet(getContext())){
-            progress_loading.setVisibility(View.VISIBLE);
             compositeDisposable=new CompositeDisposable();
-            final Observable<ArrayList<Restaurant>> listRestaurant = Observable.just(rd.getRestaurant());
+            progressBar.setVisibility(View.VISIBLE);
+            Observable<ArrayList<Restaurant>> listRestaurant = Observable.just(rd.getRestaurant());
             compositeDisposable.add(
                     listRestaurant
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(restaurant->{
-                        restaurantAdapter=new RestaurantAdapter(getActivity(),restaurant);
-                        recyc_listRestaurant.setAdapter(restaurantAdapter);
-                        progress_loading.setVisibility(View.GONE);
+                            restaurantAdapter=new RestaurantAdapter(getActivity(),restaurant);
+                            recyc_listRestaurant.setAdapter(restaurantAdapter);
+                            progressBar.setVisibility(View.GONE);
+
                     },throwable -> {
                         Toast.makeText(getActivity(), "Lỗi"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        progress.hideProgress();
                     }));
         }
 
     }
+//    public class getListRestaurant extends AsyncTask<String,String,ArrayList<Restaurant>>{
+//    @Override
+//    protected void onPreExecute() {
+//        progressBar.setVisibility(View.VISIBLE);
+//    }
+//
+//    @Override
+//    protected void onPostExecute(ArrayList<Restaurant> restaurants) {
+//        restaurantAdapter=new RestaurantAdapter(getActivity(),restaurants);
+//        recyc_listRestaurant.setAdapter(restaurantAdapter);
+//        progressBar.setVisibility(View.GONE);
+//    }
+//
+//    @Override
+//    protected ArrayList<Restaurant> doInBackground(String... strings) {
+//        ArrayList<Restaurant> restaurants=new ArrayList<>();
+//        RestaurantData restaurantData=new RestaurantData();
+//        try {
+//            restaurants=restaurantData.getRestaurant();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return restaurants;
+//    }
+//}
 
     private void searchRestaurant() {
         txtsearch.setOnClickListener(view -> {

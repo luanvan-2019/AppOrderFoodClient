@@ -48,7 +48,9 @@ public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.
         holder.txt_proccess.setText(Common.convertStatusToString(order.getOrderStatus()));
         holder.txt_phone.setText(order.getOrderPhone());
         holder.txt_address.setText(order.getOrderAddress());
-        holder.txt_date.setText(new StringBuilder(simpleDateFormat.format(order.getOrderDate())));
+        if(order.getOrderDate()!=null){
+            holder.txt_date.setText(new StringBuilder(simpleDateFormat.format(order.getOrderDate())));
+        }
         holder.txt_quantity.setText(order.getNumberOfItem()+"");
         holder.txt_total_price.setText(String.valueOf(holder.numberFormat.format(order.getTotalPrice())));
     }

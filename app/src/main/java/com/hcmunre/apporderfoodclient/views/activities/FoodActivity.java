@@ -2,6 +2,7 @@ package com.hcmunre.apporderfoodclient.views.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hcmunre.apporderfoodclient.R;
+import com.hcmunre.apporderfoodclient.commons.Progress;
 import com.hcmunre.apporderfoodclient.models.Database.FoodData;
 import com.hcmunre.apporderfoodclient.models.Entity.Food;
 import com.hcmunre.apporderfoodclient.models.eventbus.FoodListEvent;
@@ -41,6 +43,7 @@ public class FoodActivity extends AppCompatActivity {
     CompositeDisposable compositeDisposable;
     ProgressDialog progressDialog;
     FoodAdapter adapter;
+    Progress progress=new Progress();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,17 +86,21 @@ public class FoodActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
             try {
-                progressDialog=new ProgressDialog(this);
                 compositeDisposable = new CompositeDisposable();
-                progressDialog.show();
                 final Observable<ArrayList<Food>> listFood=Observable.just(foodData.getFoodOfMenu(event.getCategory().getmId()));
+                Handler handler=new Handler();
+                progress.showProgress(this);
                 compositeDisposable.add(listFood
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(foods -> {
-                            adapter=new FoodAdapter(foods, FoodActivity.this);
-                            recyclerView.setAdapter(adapter);
-                            progressDialog.dismiss();
+                            handler.postDelayed(() -> {
+                                adapter=new FoodAdapter(foods, FoodActivity.this);
+                                recyclerView.setAdapter(adapter);
+                                progress.hideProgress();
+                            },1000);
+
+
                         },throwable -> {
                             Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                         }));
