@@ -3,14 +3,20 @@ package com.hcmunre.apporderfoodclient.views.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +47,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -59,10 +66,10 @@ public class MenuActivity extends AppCompatActivity {
     TextView txtNameRes;
     @BindView(R.id.txt_address)
     TextView txt_address;
-    @BindView(R.id.txtCountMenu)
-    TextView txtCountMenu;
     @BindView(R.id.txt_contact)
-    Button txt_contact;
+    ImageButton txt_contact;
+    @BindView(R.id.image_restaurant)
+    ImageView image_restaurant;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
     MenuAdapter menuAdapter;
@@ -73,8 +80,8 @@ public class MenuActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     CartDataSource cartDataSource;
-    CompositeDisposable compositeDisposable;
     Progress progress=new Progress();
+    FoodData foodData = new FoodData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,17 +116,6 @@ public class MenuActivity extends AppCompatActivity {
             }
 
         });
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        countCart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        compositeDisposable.clear();
-        super.onDestroy();
     }
 
     private void countCart() {
@@ -157,7 +153,11 @@ public class MenuActivity extends AppCompatActivity {
         super.onStart();
         EventBus.getDefault().register(this);
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        countCart();
+    }
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
@@ -166,31 +166,54 @@ public class MenuActivity extends AppCompatActivity {
     @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void loadMenuByRestaurant(MenuItemEvent event){
         if(event.isSuccess()){
-            txtNameRes.setText(Common.currentRestaurant.getmName());
-            txt_address.setText(Common.currentRestaurant.getmAddress());
-            collapsingToolbarLayout.setTitle(Common.currentRestaurant.getmName());
-            compositeDisposable = new CompositeDisposable();
-            FoodData foodData = new FoodData();
-            final Observable<ArrayList<Menu>> listMenu=Observable.just(foodData.getMenuResFood(event.getRestaurant().getmId()));
-            Handler handler=new Handler();
-            progress.showProgress(this);
-            compositeDisposable.add(
-                    listMenu
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(menus -> {
-                                handler.postDelayed(() -> {
-                                    menuAdapter = new MenuAdapter(MenuActivity.this, menus);
-                                    txtCountMenu.setText(menuAdapter.getItemCount() + "");
-                                    recyc_detailfood.setAdapter(menuAdapter);
-                                    menuAdapter.notifyDataSetChanged();
-                                    progress.hideProgress();
-                                },1000);
-
-                            },throwable -> {
-                                Toast.makeText(this, "Lỗi"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                            })
-            );
+            txtNameRes.setText(event.getRestaurant().getmName());
+            txt_address.setText(event.getRestaurant().getmAddress());
+            if(event.getRestaurant().getmImage()!=null){
+                byte[] decodeString = Base64.decode(event.getRestaurant().getmImage(), Base64.DEFAULT);
+                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+                image_restaurant.setImageBitmap(decodebitmap);
+            }
+            collapsingToolbarLayout.setTitle(event.getRestaurant().getmName());
+            if(Common.isConnectedToInternet(this)){
+                new getMenuByRestaurant(event.getRestaurant().getmId());
+            }else {
+                Common.showToast(this,"Vui lòng kiểm tra kết nối mạng");
+            }
         }
+    }
+    public class getMenuByRestaurant extends AsyncTask<String,String,ArrayList<Menu>>{
+
+        int restaurantId;
+
+        public getMenuByRestaurant(int restaurantId) {
+            this.restaurantId = restaurantId;
+            this.execute();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress.showProgress(MenuActivity.this);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Menu> menus) {
+            menuAdapter = new MenuAdapter(MenuActivity.this, menus);
+            recyc_detailfood.setAdapter(menuAdapter);
+            menuAdapter.notifyDataSetChanged();
+            progress.hideProgress();
+        }
+
+        @Override
+        protected ArrayList<Menu> doInBackground(String... strings) {
+            ArrayList<Menu> menus;
+            menus = foodData.getMenuResFood(restaurantId);
+            return menus;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 }

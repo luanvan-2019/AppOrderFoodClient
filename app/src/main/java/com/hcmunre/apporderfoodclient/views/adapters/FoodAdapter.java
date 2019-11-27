@@ -27,7 +27,11 @@ import com.hcmunre.apporderfoodclient.models.Entity.Food;
 import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
+import com.hcmunre.apporderfoodclient.models.eventbus.CalculatePriceEvent;
 import com.hcmunre.apporderfoodclient.views.activities.PreferenceUtils;
+import com.hcmunre.apporderfoodclient.views.activities.SignInActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -68,32 +72,50 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         final Food food = arrayList.get(position);
         holder.itemView.setTag(position);
         holder.txtitem_name.setText(food.getName());
-        holder.txtitem_price.setText(holder.currencyVN.format(food.getPrice()));
+        holder.txtitem_price.setText(new StringBuilder(holder.currencyVN.format(food.getPrice())).append("đ"));
+        holder.txtdescription.setText(food.getDescription());
         byte[] decodeString= Base64.decode(food.getImage(),Base64.DEFAULT);
         Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
         holder.img_food.setImageBitmap(decodeImage);
-        holder.setListerner((view, position1) -> {
-            //tạo cart
-            CartItem cartItem=new CartItem();
-            cartItem.setFoodId(food.getId());
-            cartItem.setFoodName(food.getName());
-            cartItem.setFoodImage(food.getImage());
-            cartItem.setFoodPrice(food.getPrice());
-            cartItem.setFoodQuantity(1);
-            cartItem.setEmail(PreferenceUtils.getEmail(activity));
-            cartItem.setRestaurantId(Common.currentRestaurant.getmId());
-            compositeDisposable.add(
-                    cartDataSource.insertOrReplaceAll(cartItem)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(()->{
-                                        Toast.makeText(activity, "Đã thêm vào giỏ hàng "+food.getName(), Toast.LENGTH_SHORT).show();
-                                    },
-                                    throwable -> {
-                                        Toast.makeText(activity, "[THÊM VÀO GIỎ]"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                                    })
-            );
-        });
+        holder.txt_status_food.setText(Common.convertStatusFoodToString(food.getStatus()));
+        if(holder.txt_status_food.getText().toString()=="Hết món"){
+            holder.txt_status_food.setVisibility(View.VISIBLE);
+            holder.btnAddCart.setVisibility(View.GONE);
+        }else {
+            holder.txt_status_food.setVisibility(View.GONE);
+            holder.btnAddCart.setVisibility(View.VISIBLE);
+            holder.setListerner((view, position1) -> {
+                //tạo cart
+                if(PreferenceUtils.getEmail(activity)!=null){
+                    CartItem cartItem=new CartItem();
+                    cartItem.setFoodId(food.getId());
+                    cartItem.setFoodName(food.getName());
+                    cartItem.setFoodImage(food.getImage());
+                    cartItem.setFoodPrice(food.getPrice());
+                    cartItem.setFoodQuantity(1);
+                    cartItem.setEmail(PreferenceUtils.getEmail(activity));
+                    cartItem.setRestaurantId(Common.currentRestaurant.getmId());
+                    cartItem.setRestaurantName(Common.currentRestaurant.getmName());
+                    cartItem.setRestaurantImage(Common.currentRestaurant.getmImage());
+                    compositeDisposable.add(
+                            cartDataSource.insertOrReplaceAll(cartItem)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(()->{
+                                                EventBus.getDefault().postSticky(new CalculatePriceEvent());
+                                            },
+                                            throwable -> {
+                                                Toast.makeText(activity, "[THÊM VÀO GIỎ]"+throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                            })
+                    );
+                }else {
+                    activity.startActivity(new Intent(activity, SignInActivity.class));
+                    activity.finish();
+                }
+
+            });
+        }
+
 
     }
 
@@ -112,11 +134,13 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         @BindView(R.id.quantityTxt)
         TextView quantityTxt;
         @BindView(R.id.btnAddCart)
-        LinearLayout btnAddCart;
-        @BindView(R.id.llMinus)
-        LinearLayout llMinus;
+        ImageView btnAddCart;
+        @BindView(R.id.txtdescription)
+        TextView txtdescription;
+        @BindView(R.id.txt_status_food)
+        TextView txt_status_food;
         Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+        NumberFormat currencyVN = NumberFormat.getInstance(localeVN);
         cartClickListerner listerner;
         public void setListerner(cartClickListerner listerner) {
             this.listerner = listerner;

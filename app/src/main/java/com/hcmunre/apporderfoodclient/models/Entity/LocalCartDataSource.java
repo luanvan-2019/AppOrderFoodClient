@@ -65,4 +65,5 @@ public class LocalCartDataSource implements CartDataSource {
     public Single<Integer> cleanCart(String email, int restaurantId) {
         return cartDAO.cleanCart(email, restaurantId);
     }
+
 }

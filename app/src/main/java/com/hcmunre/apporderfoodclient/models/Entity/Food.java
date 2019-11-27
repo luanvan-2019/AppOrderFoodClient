@@ -6,9 +6,10 @@ import android.os.Parcelable;
 public class Food{
     public int id;
     public String name;
-    public Float price;
     public  String image;
     private String description;
+    public Float price;
+    private int status;
     public Food(){
 
     }
@@ -51,5 +52,13 @@ public class Food{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

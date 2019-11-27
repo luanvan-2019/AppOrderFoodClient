@@ -1,6 +1,12 @@
 package com.hcmunre.apporderfoodclient.views.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.interfaces.CartDataSource;
+import com.hcmunre.apporderfoodclient.models.Database.RestaurantData;
 import com.hcmunre.apporderfoodclient.models.Entity.AllCartItem;
 import com.hcmunre.apporderfoodclient.models.Entity.CartData;
 import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
+import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
+import com.hcmunre.apporderfoodclient.models.eventbus.MenuItemEvent;
+import com.hcmunre.apporderfoodclient.views.activities.MenuActivity;
+import com.hcmunre.apporderfoodclient.views.activities.NearRestaurantActivity;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +42,7 @@ public class AllCartAdapter extends RecyclerView.Adapter<AllCartAdapter.ViewHold
     Context context;
     List<AllCartItem> allCartItems;
     CartDataSource cartDataSource;
+    RestaurantData restaurantData=new RestaurantData();
     public AllCartAdapter(Context context, List<AllCartItem> allCartItems) {
         this.context = context;
         this.allCartItems = allCartItems;
@@ -43,10 +59,46 @@ public class AllCartAdapter extends RecyclerView.Adapter<AllCartAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AllCartItem cartItem=allCartItems.get(position);
-        holder.txt_restaurant_name.setText(Common.currentRestaurant.getmName());
+        holder.txt_restaurant_name.setText(cartItem.getRestaurantName());
+        if(cartItem.getRestaurantImage()!=null){
+            byte[] decodeString= Base64.decode(cartItem.getRestaurantImage(),Base64.DEFAULT);
+            Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+            holder.image_restaurant.setImageBitmap(decodeImage);
+        }
+
         holder.txtTotalPrice.setText(holder.currencyVN.format(cartItem.getTotalPrice()));
         holder.txt_count_item.setText(cartItem.getTotalItem()+"");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id=String.valueOf(cartItem.getRestaurantId());
+                new getRestaurantById(id);
+            }
+        });
 
+    }
+    public class getRestaurantById extends AsyncTask<String,String, ArrayList<Restaurant>> {
+        private String id;
+
+        public getRestaurantById(String id) {
+            this.id = id;
+            this.execute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Restaurant> restaurants) {
+            Common.currentRestaurant = restaurants.get(0);
+            EventBus.getDefault().postSticky(new MenuItemEvent(true, Common.currentRestaurant));
+            context.startActivity(new Intent(context, MenuActivity.class));
+
+        }
+
+        @Override
+        protected ArrayList<Restaurant> doInBackground(String... strings) {
+            ArrayList<Restaurant> restaurants;
+            restaurants=restaurantData.getRestaurantById(id);
+            return restaurants;
+        }
     }
 
     @Override
@@ -61,6 +113,8 @@ public class AllCartAdapter extends RecyclerView.Adapter<AllCartAdapter.ViewHold
         TextView txtTotalPrice;
         @BindView(R.id.txt_count_item)
         TextView txt_count_item;
+        @BindView(R.id.image_restaurant)
+        RoundedImageView image_restaurant;
         Locale locale=new Locale("vi","VN");
         NumberFormat currencyVN=NumberFormat.getCurrencyInstance(locale);
         public ViewHolder(@NonNull View itemView) {

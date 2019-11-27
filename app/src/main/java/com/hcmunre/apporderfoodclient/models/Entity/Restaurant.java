@@ -10,6 +10,7 @@ public class Restaurant implements Serializable {
     private String mImage;
     private String UserOwner;
     private Time opening,closing;
+    private Double distance;
 
 
     public Restaurant() {
@@ -93,5 +94,13 @@ public class Restaurant implements Serializable {
 
     public void setClosing(Time closing) {
         this.closing = closing;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 }

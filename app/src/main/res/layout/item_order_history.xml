@@ -1,178 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff">
     <LinearLayout
-        android:id="@+id/linear1"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="Mã đơn hàng:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="1"
-            android:id="@+id/txt_orderId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/linear2"
-        android:layout_below="@id/linear1"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="Tình trạng: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="đã đặt"
-            android:id="@+id/txt_proccess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/linear3"
-        android:layout_below="@id/linear2"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="Số điện thoại: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text=""
-            android:id="@+id/txt_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/linear4"
-        android:layout_below="@id/linear3"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="Địa chỉ: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text=""
-            android:id="@+id/txt_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="14dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
 
-    </LinearLayout>
-    <View
-        android:id="@+id/view"
-        android:background="@color/colorGreyLight"
-        android:layout_below="@id/linear4"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"/>
-    <LinearLayout
-        android:id="@+id/linear5"
-        android:layout_below="@id/view"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text="Ngày đặt: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="15sp"
-            android:textColor="#262628"
-            android:fontFamily="@font/robotoregular"
-            android:text=""
-            android:id="@+id/txt_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
         <LinearLayout
-            android:layout_marginRight="10dp"
-            android:gravity="right"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/txt_quantity"
-                android:textSize="15sp"
-                android:textColor="#262628"
-                android:fontFamily="@font/robotoregular"
-                android:text="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textSize="15sp"
-                android:textColor="#262628"
-                android:fontFamily="@font/robotoregular"
-                android:text=" phần - "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_marginRight="5dp"
-                android:textSize="15sp"
-                android:textColor="#262628"
-                android:fontFamily="@font/robotoregular"
-                android:text="2000"
-                android:id="@+id/txt_total_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textSize="15sp"
-                android:textColor="#262628"
-                android:fontFamily="@font/robotoregular"
-                android:text="VND"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image_restaurant"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/image_default"
+                app:riv_corner_radius="4dp" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/txt_name_restaurant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/robotoregular"
+                        android:text="Đồ ăn đêm food Sài gòn"
+                        android:textColor="#262628"
+                        android:textSize="15sp"/>
+                    <ImageView
+                        android:visibility="gone"
+                        android:layout_marginLeft="35dp"
+                        android:src="@drawable/ic_success"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/image_complete"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linear3"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/txt_quantity"
+                        android:textSize="15sp"
+                        android:textColor="#262628"
+                        android:fontFamily="@font/robotoregular"
+                        android:text="3 phần"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textSize="15sp"
+                        android:textColor="#262628"
+                        android:fontFamily="@font/robotoregular"
+                        android:text="0"
+                        android:id="@+id/txt_total_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:layout_marginRight="10dp"
+                        android:gravity="right"
+                        android:id="@+id/txt_order_date"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorGrey"
+                        android:fontFamily="@font/robotoregular"
+                        android:text="11/10/2019"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>

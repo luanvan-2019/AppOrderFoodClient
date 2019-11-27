@@ -17,7 +17,6 @@
         android:weightSum="4"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -26,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Giao đến"
@@ -33,6 +33,7 @@
                 android:fontFamily="@font/robotoregular"
                 android:layout_marginBottom="10dp"/>
             <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/txtAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,9 +77,9 @@
         android:layout_below="@id/linear2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="4"
-        android:layout_marginLeft="10dp">
+        android:weightSum="4">
         <LinearLayout
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -120,7 +121,52 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:id="@+id/linear"
         android:layout_below="@id/linear3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ngày giao"
+                android:textSize="14sp"
+                android:fontFamily="@font/robotoregular"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/txt_date"
+                android:textColor="#262628"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:fontFamily="@font/robotoregular"
+                android:layout_marginBottom="10dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+           <ImageView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:src="@drawable/ic_arrow_right"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_below="@id/linear"
         android:orientation="horizontal"
         android:id="@+id/linear4"
         android:layout_width="match_parent"
@@ -130,12 +176,12 @@
     <LinearLayout
         android:id="@+id/linear5"
         android:layout_below="@id/linear4"
-        android:layout_marginLeft="10dp"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
+            android:layout_marginLeft="10dp"
             android:weightSum="4"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -153,11 +199,11 @@
                     android:fontFamily="@font/robotoregular"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"/>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyc_order_detail"
-                        android:layout_marginBottom="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyc_order_detail"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
         <View
@@ -165,6 +211,7 @@
             android:layout_height="2dp"
             android:background="@color/colorGreyLight"/>
         <LinearLayout
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -235,7 +282,7 @@
                 android:layout_height="wrap_content"
                 android:checkedButton="1">
                 <RadioButton
-                    android:id="@+id/btnDirect"
+                    android:id="@+id/btn_cod"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tiền mặt"
@@ -244,10 +291,10 @@
                     android:buttonTint="#4CAF50"
                     android:fontFamily="@font/robotoregular"/>
                 <RadioButton
-                    android:id="@+id/btnATM"
+                    android:id="@+id/btn_payment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ATM"
+                    android:text="Paypal"
                     android:textSize="17sp"
                     android:textColor="#262628"
                     android:fontFamily="@font/robotoregular"
@@ -258,21 +305,20 @@
         </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="10.7dp"
-        android:background="#f15421"
-        android:gravity="center_vertical">
-        <TextView
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp"
-            android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtfinish"
-            android:text="Đặt"/>
-    </LinearLayout>
-
+        android:id="@+id/btnOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/background_button_cart"
+        android:text="Đặt hàng"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/colorWhite"
+        android:textSize="18dp" />
 </RelativeLayout>

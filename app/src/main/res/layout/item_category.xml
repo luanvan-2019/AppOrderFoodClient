@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageListMenu"
+            android:layout_gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_mypicture"
+            app:riv_corner_radius="100dp" />
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:id="@+id/txtListMenu"
+            android:textColor="#000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đồ ăn"
+            android:fontFamily="@font/robotoregular"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</RelativeLayout>

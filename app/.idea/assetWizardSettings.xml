@@ -24,7 +24,18 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="opacityPercent" value="60" />
+                                                <entry key="opacityPercent" value="80" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="clipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_person_pin_circle_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -59,7 +70,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="D:\ProjectAndroid\images\restaurant_marker.png" />
+                                      <entry key="imageAsset" value="C:\Users\huutr\Desktop\restaurant_marker.png" />
                                       <entry key="outputName" value="restaurant_marker" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="f05421" />
@@ -178,7 +189,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/Android/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_clear_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_remove_circle_outline_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -188,8 +199,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_clear" />
-                            <entry key="sourceFile" value="C:\Users\ThomasNguyen" />
+                            <entry key="outputName" value="ic_remove_circle" />
+                            <entry key="sourceFile" value="C:\Users\huutr\Desktop\turn-off.svg" />
                           </map>
                         </option>
                       </PersistentState>

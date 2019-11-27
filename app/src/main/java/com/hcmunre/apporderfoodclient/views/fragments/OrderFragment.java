@@ -1,6 +1,5 @@
 package com.hcmunre.apporderfoodclient.views.fragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +35,7 @@ public class OrderFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Lịch sử"));
         tabLayout.addTab(tabLayout.newTab().setText("Đơn nháp"));
         tabOrderFragmentAdapter = new TabOrderFragmentAdapter(getActivity().getSupportFragmentManager(),tabLayout.getTabCount());
-
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(tabOrderFragmentAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

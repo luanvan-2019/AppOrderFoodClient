@@ -1,7 +1,9 @@
 package com.hcmunre.apporderfoodclient.views.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -46,13 +48,18 @@ public class CartListActivity extends AppCompatActivity {
     @BindView(R.id.txtTotalPrice)
     TextView txtTotalPrice;
     @BindView(R.id.btnOrder)
-    Button btnOrder;
+    TextView btnOrder;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     Locale localeVN;
     NumberFormat currencyVN;
     CompositeDisposable compositeDisposable;
     CartDataSource cartDataSource;
+    @Override
+    public void onDestroy() {
+        compositeDisposable.clear();
+        super.onDestroy();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +84,7 @@ public class CartListActivity extends AppCompatActivity {
         compositeDisposable=new CompositeDisposable();
         cartDataSource=new LocalCartDataSource(CartData.getInstance(this).cartDAO());
         btnOrder.setOnClickListener(view -> {
-            EventBus.getDefault().postSticky(new SentTotalCashEvent(txtTotalPrice.getText().toString()));
+            EventBus.getDefault().postSticky(new SentTotalCashEvent((txtTotalPrice.getText().toString())));
             startActivity(new Intent(CartListActivity.this, DetailOrderActivity.class));
         });
         getItemInCart();
@@ -90,12 +97,12 @@ public class CartListActivity extends AppCompatActivity {
                 .subscribe(cartItems -> {
                     if(cartItems.isEmpty()){
                         btnOrder.setText("Giỏ hàng trống");
+                        btnOrder.setBackgroundResource(R.drawable.background_button_cart);
                         btnOrder.setEnabled(false);
-                        btnOrder.setBackgroundResource(R.color.colorGreyLight);
                     }else {
-                        btnOrder.setText("Đặt hàng");
+                        btnOrder.setText("Giao hàng");
                         btnOrder.setEnabled(true);
-                        btnOrder.setBackgroundResource(R.color.colorPrimary);
+                        btnOrder.setBackgroundResource(R.drawable.background_button_cart);
                         CartAdapter cartAdapter=new CartAdapter(this,cartItems);
                         recyc_order.setAdapter(cartAdapter);
                         CalculateCartTotalPrice();
@@ -118,33 +125,30 @@ public class CartListActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(Long aLong) {
-                        if(aLong==0){
+                        if(aLong<=0){
                             btnOrder.setText("Giỏ hàng trống");
+                            btnOrder.setBackgroundResource(R.drawable.background_button_cart);
                             btnOrder.setEnabled(false);
-                            btnOrder.setBackgroundResource(R.color.colorGreyLight);
+
                         }else {
-                            btnOrder.setText("Đặt hàng");
+                            btnOrder.setText("Giao hàng");
                             btnOrder.setEnabled(true);
-                            btnOrder.setBackgroundResource(R.color.colorPrimary);
+                            btnOrder.setBackgroundResource(R.drawable.background_button_cart);
                         }
-                        txtTotalPrice.setText(String.valueOf(currencyVN.format(aLong)));
+                        txtTotalPrice.setText(new StringBuilder(currencyVN.format(aLong)).append("đ"));
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         if(e.getMessage().contains("Query return empty"))
                             txtTotalPrice.setText("0");
-                        else
-                            Toast.makeText(CartListActivity.this, "SUM CART"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        else{
+                            Log.d(Common.TAG,"SUM CART "+e.getMessage());
+                        }
                     }
                 });
     }
 
-    @Override
-    public void onDestroy() {
-        compositeDisposable.clear();
-        super.onDestroy();
-    }
     //event bus
 
     @Override

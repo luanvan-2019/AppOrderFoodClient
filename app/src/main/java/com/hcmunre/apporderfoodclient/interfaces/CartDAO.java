@@ -9,7 +9,9 @@ import androidx.room.Update;
 
 import com.hcmunre.apporderfoodclient.models.Entity.AllCartItem;
 import com.hcmunre.apporderfoodclient.models.Entity.CartItem;
+import com.hcmunre.apporderfoodclient.models.Entity.Status;
 
+import java.time.Instant;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -25,7 +27,7 @@ public interface CartDAO {
             "GROUP BY restaurantId")
     Single<Long> sumPriceByRestaurant(String email);
     //
-    @Query("SELECT restaurantId,SUM(foodPrice*foodQuantity) AS totalPrice,COUNT(foodId) AS totalItem  FROM Cart WHERE email=:email GROUP BY restaurantId")
+    @Query("SELECT restaurantId,restaurantName,restaurantImage,SUM(foodPrice*foodQuantity) AS totalPrice,COUNT(foodId) AS totalItem  FROM Cart WHERE email=:email GROUP BY restaurantId")
     Flowable<List<AllCartItem>> getAllCartItem(String email);
     //
     @Query("SELECT COUNT(*) FROM Cart WHERE email=:email AND restaurantId=:restaurantId")
@@ -48,4 +50,5 @@ public interface CartDAO {
 
     @Query("DELETE FROM Cart WHERE email=:email AND restaurantId=:restaurantId ")
     Single<Integer> cleanCart(String email,int restaurantId);
+
 }

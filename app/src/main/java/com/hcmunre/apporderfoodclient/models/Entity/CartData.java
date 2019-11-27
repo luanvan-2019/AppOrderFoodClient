@@ -7,11 +7,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.hcmunre.apporderfoodclient.interfaces.CartDAO;
+import com.hcmunre.apporderfoodclient.interfaces.StatusDao;
 
-@Database(version = 2,entities = CartItem.class,exportSchema = false)
+@Database(version = 1,entities = {CartItem.class,Status.class},exportSchema = false)
 public abstract class CartData extends RoomDatabase {
 
     public abstract CartDAO cartDAO();
+    public abstract StatusDao statusDao();
     private static CartData instance;
     public static CartData getInstance(Context context){
         if(instance==null){

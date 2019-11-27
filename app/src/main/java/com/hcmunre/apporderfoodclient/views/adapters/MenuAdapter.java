@@ -2,6 +2,9 @@ package com.hcmunre.apporderfoodclient.views.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,14 +46,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MenuAdapter.ViewHolder holder, int position) {
         final Menu menu = listMenus.get(position);
-        holder.imageMenu.setImageResource(menu.getmImage());
+        if(menu.getmImage()!=null){
+            byte[] decodeString= Base64.decode(menu.getmImage(),Base64.DEFAULT);
+            Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+            holder.imageMenu.setImageBitmap(decodeImage);
+        }
         holder.txtNameMenu.setText(menu.getmName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(mContext, FoodActivity.class);
-//                intent.putExtra("dataMenu", menu);
-//                mContext.startActivity(intent);
                 EventBus.getDefault().postSticky(new FoodListEvent(true,menu));
                 mContext.startActivity(new Intent(mContext, FoodActivity.class));
             }

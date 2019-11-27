@@ -1,67 +1,57 @@
 package com.hcmunre.apporderfoodclient.views.activities;
 
+import android.accounts.Account;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
-import com.hcmunre.apporderfoodclient.models.Common.CommonClass;
-import com.hcmunre.apporderfoodclient.models.Database.DataConnetion;
-import com.hcmunre.apporderfoodclient.models.Database.SignInData;
-import com.hcmunre.apporderfoodclient.models.Database.TokenData;
-import com.hcmunre.apporderfoodclient.models.Entity.Token;
+import com.hcmunre.apporderfoodclient.models.Database.UserData;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
 
-import java.sql.Connection;
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.paperdb.Paper;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class SignInActivity extends AppCompatActivity {
     private static final int API_REQUEST_CODE = 1234;
     String usernam, passwordd;
     User user;
     @BindView(R.id.btnSignIn)
-    Button btnSigin;
+    TextView btnSigin;
     @BindView(R.id.btnLoginPhone)
-    Button btnLoginPhone;
+    TextView btnLoginPhone;
     @BindView(R.id.editEmail)
     EditText editEmail;
     @BindView(R.id.editPassword)
@@ -70,32 +60,25 @@ public class SignInActivity extends AppCompatActivity {
     TextView txtSignup;
     @BindView(R.id.txtForgetPass)
     TextView txtForgetPass;
-    @BindView(R.id.progress_login)
-    ProgressBar progress_login;
+    @BindView(R.id.btn_login_facebook)
+    LoginButton btn_login_facebook;
+    private CallbackManager mCallbackManager;
     private List<AuthUI.IdpConfig> providers;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-    CompositeDisposable compositeDisposable=new CompositeDisposable() ;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
         init();
+//        setBtn_login_facebook();
 
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        compositeDisposable.clear();
-        super.onDestroy();
     }
 
     private void init() {
         Paper.init(this);
-        progress_login.setVisibility(View.GONE);
         btnSigin.setOnClickListener(v -> {
             usernam = editEmail.getText().toString();
             passwordd = editPassword.getText().toString();
@@ -109,6 +92,7 @@ public class SignInActivity extends AppCompatActivity {
         if (utils.getEmail(this) != null) {
             Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
             startActivity(intent);
+            finish();
         } else {
 
         }
@@ -117,8 +101,8 @@ public class SignInActivity extends AppCompatActivity {
         authStateListener = firebaseAuth1 -> {
             FirebaseUser user = firebaseAuth1.getCurrentUser();
             if (user != null) { //user đã login
-                startActivity(new Intent(SignInActivity.this,HomeActivity.class)
-                .putExtra("phone",user.getPhoneNumber())
+                startActivity(new Intent(SignInActivity.this, CreateUserInfoActivity.class)
+                        .putExtra("phone", user.getPhoneNumber())
                 );
                 finish();
             } else {
@@ -127,6 +111,40 @@ public class SignInActivity extends AppCompatActivity {
             }
         };
     }
+//    private void setBtn_login_facebook(){
+//        btn_login_facebook.setReadPermissions("user_friends");
+//        mCallbackManager = CallbackManager.Factory.create();
+//        btn_login_facebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                Profile profile=Profile.getCurrentProfile();
+//                userInfor(profile);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                Log.d("BBB","Login canceled.");
+//            }
+//
+//            @Override
+//            public void onError(FacebookException e) {
+//
+//            }
+//        });
+//    }
+
+//    private void userInfor(Profile profile){
+//        if(profile!=null){
+//            Intent intent=new Intent(this,HomeActivity.class);
+//            PreferenceUtils.saveFBId(profile.getId(),this);
+//            PreferenceUtils.saveName(profile.getName(),this);
+//            intent.putExtra("name",profile.getFirstName());
+//            intent.putExtra("surname",profile.getLastName());
+//            intent.putExtra("imageUrl",profile.getProfilePictureUri(200,200).toString());
+//            startActivity(intent);
+//
+//        }
+//    }
 
     private void loginWithPhone() {
         btnLoginPhone.setOnClickListener(view ->
@@ -152,7 +170,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    public class CheckLogin extends AsyncTask<String, String, String>//<params:giá trị truyền vào phần xử lý logic,progress,result>
+    public class CheckLogin extends AsyncTask<String, String, User>//<params:giá trị truyền vào phần xử lý logic,progress,result>
     {
         //progress:giá trị mà xử lý logic nó bắn ra cho onProgressUpdate
         //resul: khi thực thi xong luong tra ve gì thì truyền qua cho onPostExecute
@@ -174,56 +192,56 @@ public class SignInActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String r) {
+        protected void onPostExecute(User user) {
             mDialog.dismiss();
-            if (z != "success") {
-                Toast.makeText(SignInActivity.this, r, Toast.LENGTH_SHORT).show();
-            } else {
+            if (usernam.trim().equals("") || passwordd.trim().equals("")) {
+                Toast.makeText(mContext, "Vui lòng nhập tên đăng nhập hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+            } else if (user != null) {
+                Common.currentUser = user;
                 PreferenceUtils.saveEmail(usernam, SignInActivity.this);
                 PreferenceUtils.savePassword(passwordd, SignInActivity.this);
+                PreferenceUtils.saveUserId(Common.currentUser.getId(), SignInActivity.this);
+                PreferenceUtils.saveName(Common.currentUser.getmName(), SignInActivity.this);
+                PreferenceUtils.savePhone(Common.currentUser.getmPhone(), SignInActivity.this);
+                PreferenceUtils.saveAddress(Common.currentUser.getmAddress(), SignInActivity.this);
                 Intent i = new Intent(SignInActivity.this, HomeActivity.class);
-                i.putExtra(Common.KEY_USER, usernam);
                 startActivity(i);
                 finish();
-
+            } else {
+                Toast.makeText(mContext, "Tên đăng nhập hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
             }
         }
 
         @SuppressLint("WrongThread")
         @Override
-        protected String doInBackground(String... params)//...mảng dạng array
+        protected User doInBackground(String... params)//...mảng dạng array
         {
-
+            User user1 = null;
             if (usernam.trim().equals("") || passwordd.trim().equals("")) {
                 z = "Vui lòng nhập tên đăng nhập hoặc mật khẩu";
             } else {
-                SignInData userModel = new SignInData();
+                UserData userModel = new UserData();
                 user = new User();
                 user.setmEmail(usernam);
                 user.setmPassword(passwordd);
-                z = userModel.loginUser(user);
+                user1 = new User();
+                user1 = userModel.getInforUser(user);
 
             }
-            return z;
+            return user1;
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == API_REQUEST_CODE) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             firebaseAuth = FirebaseAuth.getInstance();
             if (resultCode == RESULT_OK) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(!user.getPhoneNumber().isEmpty()){
-                    startActivity(new Intent(SignInActivity.this,HomeActivity.class)
-                    .putExtra("phone",user.getPhoneNumber()));
-                    finish();
-                    return;
-                }else {
-                    Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
-                }
 
             } else {
                 Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
@@ -245,6 +263,13 @@ public class SignInActivity extends AppCompatActivity {
             firebaseAuth.removeAuthStateListener(authStateListener);
         }
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(SignInActivity.this,HomeActivity.class));
+        finish();
+        super.onBackPressed();
     }
 }
 

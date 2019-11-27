@@ -21,11 +21,14 @@ public class CartItem {
     private Float foodPrice;
     @ColumnInfo(name = "foodQuantity")
     private int foodQuantity;
-
     @ColumnInfo(name = "email")
     private String email;
     @ColumnInfo(name = "restaurantId")
     private int restaurantId;
+    @ColumnInfo(name="restaurantName")
+    private String restaurantName;
+    @ColumnInfo(name="restaurantImage")
+    private String restaurantImage;
 
     public CartItem() {
     }
@@ -92,5 +95,21 @@ public class CartItem {
 
     public void setRestaurantId(int restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public String getRestaurantImage() {
+        return restaurantImage;
+    }
+
+    public void setRestaurantImage(String restaurantImage) {
+        this.restaurantImage = restaurantImage;
     }
 }

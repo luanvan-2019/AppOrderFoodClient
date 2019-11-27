@@ -4,7 +4,6 @@ import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.OrderDetail;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,11 +15,10 @@ public class OrderData {
     Connection con;
     DataConnetion dataConnetion=new DataConnetion();
     PreparedStatement pst;
-    ResultSet rs;
-    CallableStatement ca;
     public boolean insertOrder(Order order){
+        boolean success=false;
         try {
-            String sql = "Exec Sp_InsertOrder (?,?,?,?,?,?,?,?,?)";
+            String sql = "Exec Sp_InsertOrder (?,?,?,?,?,?,?,?,?,?)";
             con = dataConnetion.connectionData();
             pst = con.prepareCall(sql);
             pst.setInt(1,order.getUserId());
@@ -29,23 +27,25 @@ public class OrderData {
             pst.setString(4,order.getOrderPhone());
             pst.setString(5,order.getOrderAddress());
             pst.setInt(6,order.getOrderStatus());
-            pst.setDate(7,order.getOrderDate());
+            pst.setString(7,order.getOrderDate());
             pst.setFloat(8,order.getTotalPrice());
             pst.setInt(9,order.getNumberOfItem());
+            pst.setInt(10,order.getPayment());
             ResultSet rs=pst.executeQuery();
             if(rs.next()){
                 Common.curentOrder=new Order();
-                Common.curentOrder.setId(rs.getInt("OrderId"));
+                Common.curentOrder.setId(rs.getInt("OrderNumber"));
+                Common.curentOrder.setOrderName("OrderName");
                 con.close();
-                return true;
+                success=true;
             } else{
                 con.close();
-                return false;
+                success=false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
+        return success;
     }
     //insert multi order
     public void insertOrderDetail(List<OrderDetail> listOrder){
@@ -78,11 +78,13 @@ public class OrderData {
                 order1.setId(rs.getInt("OrderId"));
                 order1.setUserId(rs.getInt("UserId"));
                 order1.setRestaurantId(rs.getInt("RestaurantId"));
+                order1.setNameRestaurant(rs.getString("Name"));
+                order1.setImage(rs.getString("Image"));
                 order1.setOrderName(rs.getString("OrderName"));
                 order1.setOrderPhone(rs.getString("OrderPhone"));
                 order1.setOrderAddress(rs.getString("OrderAddress"));
                 order1.setOrderStatus(rs.getInt("OrderStatus"));
-                order1.setOrderDate(rs.getDate("OrderDate"));
+                order1.setOrderDate(rs.getString("OrderDate"));
                 order1.setTotalPrice(rs.getFloat("TotalPrice"));
                 order1.setNumberOfItem(rs.getInt("NumberOfItem"));
                 listOrders.add(order1);

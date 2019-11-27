@@ -1,235 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="10">
+    android:layout_height="match_parent">
     <LinearLayout
-        android:gravity="center"
-        android:layout_weight="2"
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/myprofile"
-            android:layout_gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_eat"
-            app:riv_corner_radius="100dp"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorGreyLight">
-        <TextView
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:padding="14dp"
-            android:text="Thông tin người dùng"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <TextView
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:padding="14dp"
-            android:text="Thay đổi ảnh"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/colorGreyLight">
+        android:weightSum="10">
         <LinearLayout
+            android:background="@color/white"
             android:orientation="vertical"
-            android:layout_weight="5"
-            android:weightSum="3"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            android:layout_height="200dp">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image_profile"
+                android:layout_gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_account_circle"
+                app:riv_corner_radius="100dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
+                    android:fontFamily="sans-serif"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/background_button_cart"
+                    android:id="@+id/txt_login"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tên"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="15dp"
-                    android:padding="16dp"/>
-                <EditText
-                    android:id="@+id/edit_name"
-                    android:textSize="14dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:padding="15dp"
-                    android:text="Thomas"
-                    android:layout_gravity="center"
-                    android:background="#00000000"/>
-
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGreyLight"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:text="Đăng nhập"/>
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
+                    android:textSize="13sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_centerInParent="true"
+                    android:textColor="#000000"
+                    android:id="@+id/txt_name_user"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Số điện thoại"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="15dp"
-                    android:padding="16dp"/>
-                <EditText
-                    android:id="@+id/txtPhone"
-                    android:textSize="14dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="phone"
-                    android:padding="15dp"
-                    android:text=""
-                    android:layout_gravity="center"
-                    android:background="#00000000"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGreyLight"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    android:layout_height="wrap_content"
-                    android:text="Email"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="15dp"
-                    android:padding="16dp"/>
-                <EditText
-                    android:id="@+id/edit_email"
-                    android:textSize="14dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="textEmailAddress"
-                    android:padding="15dp"
-                    android:text="huutrong1097@gmail.com"
-                    android:layout_gravity="center"
-                    android:background="#00000000"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGreyLight"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    android:layout_height="wrap_content"
-                    android:text="Ngày sinh"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="15dp"
-                    android:padding="16dp"/>
-                <EditText
-                    android:textSize="14dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="date"
-                    android:padding="15dp"
-                    android:text="10/10/1997"
-                    android:layout_gravity="center"
-                    android:background="#00000000"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorGreyLight"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    android:layout_height="wrap_content"
-                    android:text="Địa chỉ"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="15dp"
-                    android:padding="16dp"/>
-                <EditText
-                    android:id="@+id/edit_address"
-                    android:textSize="14dp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:padding="15dp"
-                    android:text="264 Bùi Thị Xuân"
-                    android:layout_gravity="center"
-                    android:background="#00000000"/>
-            </LinearLayout>
+                    android:text="Nguyễn Hữu Trọng"/>
+            </RelativeLayout>
 
 
         </LinearLayout>
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="3"
-            android:background="@color/colorGreyLight"
+            android:layout_marginTop="10dp"
+            android:padding="14dp"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_restaurant"/>
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/btn_app_restaurant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Ứng dụng cho chủ quán"
+                android:fontFamily="@font/robotoregular"
+                android:textSize="13sp"
+                android:textAllCaps="false"
+                android:textColor="#000000"/>
+            <LinearLayout
+                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_right"/>
+            </LinearLayout>
 
-            <Button
-                android:background="@color/white"
-                android:layout_marginTop="10dp"
-                android:id="@+id/btnupdateuser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/robotoregular"
-                android:gravity="center"
-                android:padding="14dp"
-                android:text="Cập nhật"
-                android:textAllCaps="false"
-                android:textColor="#f05421"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:visibility="visible" />
-            <Button
-                android:background="@color/white"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/btnlogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="14dp"
-                android:text="Đăng xuất"
-                android:fontFamily="@font/robotoregular"
-                android:textSize="13sp"
-                android:textAllCaps="false"
-                android:textColor="#f05421"
-                android:textStyle="bold" />
         </LinearLayout>
+        <TextView
+            android:layout_marginTop="40dp"
+            android:id="@+id/btnlogout"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:paddingRight="100dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="100dp"
+            android:textColor="@color/white"
+            android:background="@drawable/background_button_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đăng xuất"/>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

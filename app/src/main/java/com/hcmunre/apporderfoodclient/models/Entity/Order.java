@@ -1,15 +1,13 @@
 package com.hcmunre.apporderfoodclient.models.Entity;
 
-import java.sql.Date;
-
 public class Order {
     private int id;
     private int userId;
     private int restaurantId,orderStatus;
-    private String orderName,orderPhone,orderAddress;
-    private Date orderDate;
+    private String orderName,orderPhone,orderAddress,orderDate,nameRestaurant,image;
     private Float totalPrice;
     private int numberOfItem;
+    private int payment;
 
     public int getId() {
         return id;
@@ -67,11 +65,11 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public Date getOrderDate() {
+    public String getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -89,5 +87,29 @@ public class Order {
 
     public void setNumberOfItem(int numberOfItem) {
         this.numberOfItem = numberOfItem;
+    }
+
+    public String getNameRestaurant() {
+        return nameRestaurant;
+    }
+
+    public void setNameRestaurant(String nameRestaurant) {
+        this.nameRestaurant = nameRestaurant;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getPayment() {
+        return payment;
+    }
+
+    public void setPayment(int payment) {
+        this.payment = payment;
     }
 }

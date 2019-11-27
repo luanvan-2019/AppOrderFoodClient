@@ -104,7 +104,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             }
             else {
                 //xóa item
-                cartDataSource.deleteCart(cartItem)
+                cartDataSource.deleteCart(cartItems.get(position))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SingleObserver<Integer>() {

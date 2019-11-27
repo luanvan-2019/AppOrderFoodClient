@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class Menu implements Serializable {
     private int mId;
     private String mName;
-    private int mImage;
+    private String mImage;
 
     public Menu() {
     }
 
-    public Menu(int mId, String mName, int mImage) {
+    public Menu(int mId, String mName, String mImage) {
         this.mId = mId;
         this.mName = mName;
         this.mImage = mImage;
@@ -32,11 +32,11 @@ public class Menu implements Serializable {
         this.mName = mName;
     }
 
-    public int getmImage() {
+    public String getmImage() {
         return mImage;
     }
 
-    public void setmImage(int mImage) {
+    public void setmImage(String mImage) {
         this.mImage = mImage;
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -40,46 +40,66 @@
                 android:textSize="14.4sp" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
             <ImageView
-                android:src="@drawable/ic_notification"
                 android:layout_width="20dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:src="@drawable/ic_notification" />
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_margin="10dp"
+                android:id="@+id/main"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/testing"/>
-            <include
-                android:id="@+id/recyc"
-                android:layout_below="@id/testing"
-                layout="@layout/recyclerview_listmenu"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_person_pin"/>
+                <TextView
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/robotoregular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_address"/>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@id/main"
+                android:id="@+id/recyc_slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <ProgressBar
-                android:layout_centerInParent="true"
+
+            <FrameLayout
+                android:id="@+id/container_a"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/progress"/>
-            <include
-                android:layout_below="@id/recyc"
-                layout="@layout/fragment_allfood"
+                android:layout_below="@id/recyc_slider" />
+
+            <FrameLayout
+                android:id="@+id/container_b"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/container_a" />
+
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
+</LinearLayout>
 
 

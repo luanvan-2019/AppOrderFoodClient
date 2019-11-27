@@ -1,9 +1,14 @@
 package com.hcmunre.apporderfoodclient.views.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
+import com.hcmunre.apporderfoodclient.views.activities.TrackingOrderActivity;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -25,12 +32,10 @@ import butterknife.ButterKnife;
 public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.ViewHolder> {
     private Context context;
     private ArrayList<Order> listOrderHistory;
-    SimpleDateFormat simpleDateFormat;
 
     public HistoryCartAdatper(Context context, ArrayList<Order> listOrderHistory) {
         this.context = context;
         this.listOrderHistory = listOrderHistory;
-        simpleDateFormat=new SimpleDateFormat("dd/MM/yyyy");
     }
 
     @NonNull
@@ -44,39 +49,54 @@ public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.
     @Override
     public void onBindViewHolder(@NonNull HistoryCartAdatper.ViewHolder holder, int position) {
         Order order=listOrderHistory.get(position);
-        holder.txt_orderId.setText(order.getId()+"");
-        holder.txt_proccess.setText(Common.convertStatusToString(order.getOrderStatus()));
-        holder.txt_phone.setText(order.getOrderPhone());
-        holder.txt_address.setText(order.getOrderAddress());
-        if(order.getOrderDate()!=null){
-            holder.txt_date.setText(new StringBuilder(simpleDateFormat.format(order.getOrderDate())));
+        if(Common.currentRestaurant.getmImage()!=null){
+            byte[] decodeString = Base64.decode(order.getImage(), Base64.DEFAULT);
+            Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+            holder.image_restaurant.setImageBitmap(decodebitmap);
         }
-        holder.txt_quantity.setText(order.getNumberOfItem()+"");
-        holder.txt_total_price.setText(String.valueOf(holder.numberFormat.format(order.getTotalPrice())));
+        if(order.getOrderDate()!=null){
+            holder.txt_order_date.setText(order.getOrderDate());
+        }
+        holder.txt_quantity.setText(new StringBuilder("").append(order.getNumberOfItem()).append(" phần x "));
+        holder.txt_total_price.setText(new StringBuilder(holder.numberFormat.format(order.getTotalPrice())).append("đ"));
+        holder.txt_name_restaurant.setText(order.getNameRestaurant());
+//        if(Common.curentOrder.getId()==3){
+//            holder.image_complete.setVisibility(View.VISIBLE);
+//        }else {
+//            holder.image_complete.setVisibility(View.GONE);
+//        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Common.curentOrder=listOrderHistory.get(position);
+                context.startActivity(new Intent(context, TrackingOrderActivity.class));
+            }
+        });
     }
-
+    public void refresh(ArrayList<Order> orders) {
+        this.listOrderHistory = orders;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return listOrderHistory.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.txt_orderId)
-        TextView txt_orderId;
-        @BindView(R.id.txt_proccess)
-        TextView txt_proccess;
-        @BindView(R.id.txt_phone)
-        TextView txt_phone;
-        @BindView(R.id.txt_address)
-        TextView txt_address;
-        @BindView(R.id.txt_date)
-        TextView txt_date;
+        @BindView(R.id.txt_name_restaurant)
+        TextView txt_name_restaurant;
+        @BindView(R.id.txt_order_date)
+        TextView txt_order_date;
         @BindView(R.id.txt_quantity)
         TextView txt_quantity;
         @BindView(R.id.txt_total_price)
         TextView txt_total_price;
+        @BindView(R.id.image_restaurant)
+        RoundedImageView image_restaurant;
+        @BindView(R.id.image_complete)
+        ImageView image_complete;
         Locale locale=new Locale("vi","VN");
-        NumberFormat numberFormat=NumberFormat.getCurrencyInstance(locale);
+        NumberFormat numberFormat=NumberFormat.getInstance(locale);
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

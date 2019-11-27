@@ -1,6 +1,7 @@
 package com.hcmunre.apporderfoodclient.views.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.hcmunre.apporderfoodclient.R;
+import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Database.RestaurantData;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.views.adapters.RestaurantAdapter;
@@ -80,22 +82,36 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filter(editable.toString());
+                if(Common.isConnectedToInternet(SearchActivity.this)){
+                    new filter(editable.toString());
+                }else {
+                    Common.showToast(SearchActivity.this,getString(R.string.check_internet));
+                }
             }
         });
     }
+    public class filter extends AsyncTask<String,String,ArrayList<Restaurant>>{
+        String search;
 
-    private void filter(String search) {
-        RestaurantData restaurantData = new RestaurantData();
-        Observable<ArrayList<Restaurant>> listObserable = Observable.just(restaurantData.SearchFoodRes(search));
-        listObserable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(restaurants -> {
-                    restaurantAdapter = new RestaurantAdapter(this, restaurants);
-                    restaurantAdapter.notifyDataSetChanged();
-                    recyc_search.setAdapter(restaurantAdapter);
-                });
+        public filter(String search) {
+            this.search = search;
+            this.execute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Restaurant> restaurants) {
+            restaurantAdapter = new RestaurantAdapter(SearchActivity.this, restaurants);
+            restaurantAdapter.notifyDataSetChanged();
+            recyc_search.setAdapter(restaurantAdapter);
+        }
+
+        @Override
+        protected ArrayList<Restaurant> doInBackground(String... strings) {
+            ArrayList<Restaurant> restaurants;
+            RestaurantData restaurantData = new RestaurantData();
+            restaurants=restaurantData.SearchFoodRes(search);
+            return restaurants;
+        }
     }
 
     @Override

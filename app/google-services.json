@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "30470819406-t63mbnug9iaac9e0kq6siprqiq1paee0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmunre.apporderfoodclient",
+            "certificate_hash": "b36e3bf470e65fd4d73def454255085087f22474"
+          }
+        },
+        {
           "client_id": "30470819406-o20rhusf841b3ifa9r69vg7b5icm30j5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -10,7 +10,6 @@ public class User implements Serializable {
     private String mImage;
     private String mEmail;
     private String mPassword;
-    private String fbid;
     public User(){
     }
 
@@ -79,11 +78,4 @@ public class User implements Serializable {
         this.mPassword = mPassword;
     }
 
-    public String getFbid() {
-        return fbid;
-    }
-
-    public void setFbid(String fbid) {
-        this.fbid = fbid;
-    }
 }

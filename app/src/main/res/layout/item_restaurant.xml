@@ -1,85 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f5f5f5"
+    android:orientation="vertical">
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f5f5f5"
-        android:orientation="vertical"
-        android:id="@+id/parent_layout">
+        android:layout_marginBottom="1dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <LinearLayout android:orientation="vertical"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:background="@color/white">
+            android:layout_marginLeft="14dp"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:layout_marginLeft="14dp">
+                android:orientation="horizontal">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/imageRes"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/image_default"
+                    app:riv_corner_radius="4dip" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="12dp"
+                    android:orientation="vertical">
 
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:id="@+id/imageRes"
-                        android:src="@drawable/pexel"
-                        android:scaleType="fitXY"
-                        app:riv_corner_radius="4dip" />
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/txtName_Res"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="12dp">
+                        android:fontFamily="@font/robotoregular"
+                        android:text="Đồ ăn đêm food Sài gòn"
+                        android:textColor="#262628"
+                        android:textSize="15sp" />
 
-                        <TextView
-                            android:id="@+id/txtName_Res"
-                            android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/txtAddress_Res"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/robotoregular"
+                        android:text="264 Bùi Thị Xuân,phường 3,quận Tân Bình"
+                        android:textColor="#9b9b9b"
+                        android:textSize="13sp" />
+                    <LinearLayout
+                        android:gravity="right"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_gravity="center_vertical"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:textColor="#262628"
-                            android:fontFamily="@font/robotoregular"
-                            android:text="Đồ ăn đêm food Sài gòn"/>
-
+                            android:src="@drawable/ic_access_time"/>
                         <TextView
-                            android:id="@+id/txtAddress_Res"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="11.5sp"
+                            android:id="@+id/txt_minutes"
                             android:textColor="#9b9b9b"
                             android:fontFamily="@font/robotoregular"
-                            android:text="264 Bùi Thị Xuân,phường 3,quận Tân Bình"
-                            android:layout_marginTop="4dp"/>
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:gravity="right"-->
-<!--                                android:id="@+id/txtkm"-->
-<!--                                android:layout_weight="1"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginRight="10dp"-->
-<!--                                android:textSize="15sp"-->
-<!--                                android:fontFamily="@font/robotoregular"-->
-<!--                                android:textColor="#d22532"-->
-<!--                                android:text="3km"/>-->
-
-<!--                        </LinearLayout>-->
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12 Phút"/>
+                        <TextView
+                            android:id="@+id/txt_km"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/robotoregular"
+                            android:text="3km"
+                            android:textColor="#9b9b9b"
+                            android:textSize="13sp" />
                     </LinearLayout>
+
                 </LinearLayout>
-
             </LinearLayout>
-        </LinearLayout>
 
+        </LinearLayout>
     </LinearLayout>
+
+</LinearLayout>

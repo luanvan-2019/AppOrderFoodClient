@@ -7,10 +7,10 @@
     android:gravity="center">
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_margin="10dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_eat"
-       android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:riv_corner_radius="10dp"
         android:id="@+id/imageSlider"/>
 </LinearLayout>

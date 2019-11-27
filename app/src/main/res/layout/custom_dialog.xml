@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="@drawable/custom_dialog_show"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+        <TextView
+            android:id="@+id/txt_dn"
+            android:fontFamily="@font/robotoregular"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đăng xuất"/>
+        <TextView
+            android:id="@+id/txt_dn1"
+            android:layout_below="@id/txt_dn"
+            android:fontFamily="@font/robotoregular"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bạn có muốn đăng xuất khỏi ứng dụng?"/>
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/txt_dn1"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="Hủy"
+                android:background="@drawable/background_button_shape"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="Đăng xuất"
+                android:background="@drawable/background_button_shape"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+</RelativeLayout>

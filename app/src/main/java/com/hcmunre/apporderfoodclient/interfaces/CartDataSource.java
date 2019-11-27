@@ -2,6 +2,7 @@ package com.hcmunre.apporderfoodclient.interfaces;
 
 import com.hcmunre.apporderfoodclient.models.Entity.AllCartItem;
 import com.hcmunre.apporderfoodclient.models.Entity.CartItem;
+import com.hcmunre.apporderfoodclient.models.Entity.Status;
 
 import java.util.List;
 

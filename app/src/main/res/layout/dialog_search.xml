@@ -77,9 +77,10 @@
         android:layout_below="@id/layout_count"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-<!--    <ProgressBar-->
-<!--        android:id="@+id/progress_search"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"/>-->
+    <ProgressBar
+        android:id="@+id/progress"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

@@ -29,6 +29,7 @@ public class FoodData {
             food.setImage(rs.getString("Image"));
             food.setDescription(rs.getString("Description"));
             food.setPrice(rs.getFloat("Price"));
+            food.setStatus(rs.getInt("Status"));
             listFoodOfMenu.add(food);
         }
         return listFoodOfMenu;
@@ -45,6 +46,7 @@ public class FoodData {
                 menu=new Menu();
                 menu.setmId(rs.getInt("Id"));
                 menu.setmName(rs.getString("Name"));
+                menu.setmImage(rs.getString("Image"));
                 listMenuFood.add(menu);
             }
         } catch (SQLException e) {

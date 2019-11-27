@@ -89,7 +89,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
 
 //        private void setRecycListMenu(ArrayList<ListMenu> listMenus,String title) {
 //            txtListMenu.setText(title);
-//            ListMenuAdapter listMenuAdapter=new ListMenuAdapter(itemView.getContext(),listMenus);
+//            CategoryAdapter listMenuAdapter=new CategoryAdapter(itemView.getContext(),listMenus);
 //            LinearLayoutManager linearLayoutManager=new LinearLayoutManager(itemView.getContext());
 //            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 //            recyc_listmenu.setLayoutManager(linearLayoutManager);

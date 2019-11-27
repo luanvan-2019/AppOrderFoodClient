@@ -26,15 +26,13 @@ import io.reactivex.disposables.CompositeDisposable;
 public class SplashScreenActivity extends AppCompatActivity {
     TextView txtsaigonfood;
     Typeface face;
-    CompositeDisposable compositeDisposable=new CompositeDisposable();
-    private FirebaseAuth.AuthStateListener authStateListener;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
         init();
         Dexter.withActivity(this)
-                .withPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE})
+                .withPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CALL_PHONE})
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -42,7 +40,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             int secondsDelayed = 1;
                             new Handler().postDelayed(new Runnable() {
                                 public void run() {
-                                    startActivity(new Intent(SplashScreenActivity.this, SignInActivity.class));
+                                    startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
                                     finish();
                                 }
                             }, secondsDelayed * 2000);

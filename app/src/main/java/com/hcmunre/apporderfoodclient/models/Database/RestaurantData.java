@@ -1,6 +1,7 @@
 package com.hcmunre.apporderfoodclient.models.Database;
 
 import com.hcmunre.apporderfoodclient.interfaces.LoadingProgress;
+import com.hcmunre.apporderfoodclient.models.Entity.Category;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RestaurantData {
     Connection con;
@@ -17,9 +19,9 @@ public class RestaurantData {
     LoadingProgress loadingProgress;
 
     //phương thức để lấy dữ liệu
-    public ArrayList<Restaurant> getRestaurant() throws SQLException {
+    public ArrayList<Restaurant> getRestaurant(Integer cateId) throws SQLException {
         ArrayList<Restaurant> listRestaurant = new ArrayList();
-        String sql = "Exec Sp_SelectRestaurant";
+        String sql = "Exec Sp_SelectRestaurant '"+cateId+"'";
         con = dataCon.connectionData();
         pst = con.prepareStatement(sql);
         rs = pst.executeQuery();
@@ -47,8 +49,8 @@ public class RestaurantData {
         try {
             String sql = "EXEC Sp_SearchRestaurant '" + Search + "'";
             con = dataCon.connectionData();
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
             Restaurant restaurant;
             while (rs.next()) {
                 restaurant = new Restaurant();
@@ -70,13 +72,13 @@ public class RestaurantData {
     }
 
     //cửa hàng gần nhất
-    public ArrayList<Restaurant> getNearbyRestaurant(Restaurant restaurant, int distance) {
+    public ArrayList<Restaurant> getNearbyRestaurant(Restaurant restaurant) {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         try {
-            String sql = "Exec Sp_SelectDistanceRes '" + restaurant.getmLat() + "','" + restaurant.getmLng() + "','" + distance + "'";
+            String sql = "Exec Sp_SelectDistanceRestaurant '" + restaurant.getmLat() + "','" + restaurant.getmLng() + "','" + restaurant.getDistance() + "'";
             con = dataCon.connectionData();
-            pst = con.prepareStatement(sql);
-            rs = pst.executeQuery();
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 restaurant = new Restaurant();
                 restaurant.setmId(rs.getInt("Id"));
@@ -89,6 +91,7 @@ public class RestaurantData {
                 restaurant.setUserOwner(rs.getString("UserOwner"));
                 restaurant.setOpening(rs.getTime("Opening"));
                 restaurant.setClosing(rs.getTime("Closing"));
+                restaurant.setDistance(rs.getDouble("distance_in_km"));
                 restaurants.add(restaurant);
             }
         } catch (SQLException e) {
@@ -108,6 +111,15 @@ public class RestaurantData {
             if (rs.next()) {
                 restaurant = new Restaurant();
                 restaurant.setmId(rs.getInt("Id"));
+                restaurant.setmName(rs.getString("Name"));
+                restaurant.setmAddress(rs.getString("Address"));
+                restaurant.setmPhone(rs.getString("Phone"));
+                restaurant.setmLat(rs.getDouble("Lat"));
+                restaurant.setmLng(rs.getDouble("Lng"));
+                restaurant.setmImage(rs.getString("Image"));
+                restaurant.setUserOwner(rs.getString("UserOwner"));
+                restaurant.setOpening(rs.getTime("Opening"));
+                restaurant.setClosing(rs.getTime("Closing"));
                 restaurants.add(restaurant);
                 con.close();
             }
@@ -116,5 +128,23 @@ public class RestaurantData {
         }
         return restaurants;
     }
-
+    public ArrayList<Category> getCategory(){
+        ArrayList<Category> categories=new ArrayList<>();
+        try {
+            String sql="Exec Sp_SelectCategory";
+            con=dataCon.connectionData();
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            while (rs.next()){
+                Category category=new Category();
+                category.setId(rs.getInt("Id"));
+                category.setName(rs.getString("Name"));
+                category.setImage(rs.getString("Image"));
+                categories.add(category);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
 }

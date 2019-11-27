@@ -15,23 +15,13 @@
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/signin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Tạo tài khoản mới"
-            android:textColor="#00051f"
-            android:textSize="20sp"
-            android:fontFamily="@font/robotoregular"/>
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             app:errorEnabled="true"
             app:passwordToggleEnabled="true">
 
@@ -60,7 +50,21 @@
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Địa chỉ"
+                android:textSize="13sp"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,21 +97,22 @@
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
+        <TextView
             android:id="@+id/btnSignUp"
+            android:textSize="13dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:fontFamily="@font/robotoregular"
+            android:paddingRight="100dp"
+            android:paddingBottom="14dp"
+            android:paddingTop="14dp"
+            android:paddingLeft="100dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@drawable/background_button_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_button_shape"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="Đăng ký"
-            android:textColor="#f05421"
-            android:textSize="13dp"
-            android:textAllCaps="false"
-            android:textStyle="bold" />
-
-
+            android:text="Đăng ký"/>
     </LinearLayout>
 
 </RelativeLayout>

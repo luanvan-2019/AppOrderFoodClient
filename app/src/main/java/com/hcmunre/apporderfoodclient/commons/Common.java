@@ -11,10 +11,12 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
 import com.hcmunre.apporderfoodclient.R;
+import com.hcmunre.apporderfoodclient.models.Entity.Category;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
@@ -22,13 +24,15 @@ import com.hcmunre.apporderfoodclient.models.Entity.User;
 public class Common {
     public static final String NOTIFI_TITLE = "title";
     public static final String NOTIFI_CONTENT = "content";
+    public static final String PAYPAL_CLIENT_ID="AXI3rU3HxrVbDF_wtjdpZAXIfe6ky2q7v3XBR1oNcBiZPPqZgEJztnrtIulItcHNFJPTi3zSLptTgbYV";
     public static User currentUser;
     public static Order curentOrder;
     public static Restaurant currentRestaurant;
+    public static Category currentCategory;
     public static final String KEY_USER = "data_user";
     public static final String KEY_RESTAURANT = "data_restaurant";
     public static final String REMEMBER_FBID = "FBID";
-
+    public static final String TAG="ERROR";
     public static boolean isConnectedToInternet(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -46,7 +50,6 @@ public class Common {
         }
         return false;
     }
-
     public static void showNotifacation(Context context, int notiId, String title, String content, Intent intent) {
         PendingIntent pendingIntent = null;
         if (pendingIntent != null) {
@@ -72,23 +75,30 @@ public class Common {
             if (pendingIntent != null) {
                 builder.setContentIntent(pendingIntent);
             }
+            //hiển thị thông báo
             Notification notification = builder.build();
             notificationManager.notify(notiId, notification);
 
         }
     }
-    public static String convertStatusToString(int orderStatus){
-        switch (orderStatus){
+    public static String convertStatusFoodToString(int statusFood){
+        switch (statusFood){
             case 0:
-                return "Đã đặt";
+                return "Hết món";
             case 1:
-                return "Đang giao";
-            case 2:
-                return "Đã giao";
-            case -1:
-                return "Đã hủy";
+                return "Đang bán";
             default:
-                return "Đã hủy";
+                return "Đang bán";
         }
+    }
+    public static void showToast(Context context,String message){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+    public static String getTopicChannel(int id) {
+        return new StringBuilder("Restaurant").append(id).toString();
+    }
+
+    public static String createTopicSender(String topicChannel) {
+        return new StringBuilder("/topics/").append(topicChannel).toString();
     }
 }
