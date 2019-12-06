@@ -68,49 +68,25 @@ public class PreferenceUtils {
         SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
         return sharedPreferences.getInt("UserId",0);
     }
-    public static void saveFBId(String fbId,Context context){
+    public static void saveShippingStatusComming(int status,Context context){
         SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putString("FBId",fbId);
+        editor.putInt("ShippingStatusComming",status);
         editor.apply();
     }
-    public static String getFBId(Context context){
+    public static int getShippingStatusComming(Context context){
         SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
-        return sharedPreferences.getString("FBId",null);
+        return sharedPreferences.getInt("ShippingStatusComming",0);
     }
-    public static void saveStatusComfirmed(int status,Context context){
+    public static void saveShippingStatusComplete(int status,Context context){
         SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putInt("Status1",status);
+        editor.putInt("ShippingStatusComplete",status);
         editor.apply();
     }
-    public static int getStatusComfirmed(Context context){
+    public static int getShippingStatusComplete(Context context){
         SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
-        return sharedPreferences.getInt("Status1",0);
+        return sharedPreferences.getInt("ShippingStatusComplete",0);
     }
-    public static void saveStatusShipper(int status,Context context){
-        SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putInt("Status2",status);
-        editor.apply();
-    }
-    public static int getStatusShipper(Context context){
-        SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
-        return sharedPreferences.getInt("Status2",0);
-
-    }
-    public static void saveStatusComplete(int status,Context context){
-        SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putInt("Status3",status);
-        editor.apply();
-    }
-    public static int getStatusComplete(Context context){
-        SharedPreferences sharedPreferences=context.getSharedPreferences("SaveLocal",context.MODE_PRIVATE);
-        return sharedPreferences.getInt("Status3",0);
-
-    }
-
-
 
 }

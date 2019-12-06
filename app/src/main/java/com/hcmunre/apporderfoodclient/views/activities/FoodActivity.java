@@ -25,6 +25,7 @@ import com.hcmunre.apporderfoodclient.models.Database.FoodData;
 import com.hcmunre.apporderfoodclient.models.Entity.CartData;
 import com.hcmunre.apporderfoodclient.models.Entity.Food;
 import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
+import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.eventbus.CalculatePriceEvent;
 import com.hcmunre.apporderfoodclient.models.eventbus.FoodListEvent;
 import com.hcmunre.apporderfoodclient.models.eventbus.SentTotalCashEvent;
@@ -36,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -221,6 +223,9 @@ public class FoodActivity extends AppCompatActivity {
                             btnOrder.setEnabled(true);
                             btnOrder.setBackgroundResource(R.drawable.background_button_cart);
                         }
+                        float tongtien=Float.parseFloat(aLong.toString());
+                        Common.curentOrder=new Order();
+                        Common.curentOrder.setTotalPrice(tongtien);
                         Locale localeVN = new Locale("vi", "VN");
                         NumberFormat currencyVN = NumberFormat.getInstance(localeVN);
                         txtTotalPrice.setText(new StringBuilder(currencyVN.format(aLong)).append("đ"));
@@ -229,7 +234,7 @@ public class FoodActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         if(e.getMessage().contains("Query return empty"))
-                            txtTotalPrice.setText("0");
+                            txtTotalPrice.setText("0đ");
                         else{
                             Log.d(Common.TAG,"SUM CART "+e.getMessage());
                         }

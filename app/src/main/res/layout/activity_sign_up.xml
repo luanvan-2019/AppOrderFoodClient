@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Số điện thoại"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:inputType="phone" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Tên người dùng"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Địa chỉ"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -93,13 +93,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mật khẩu"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:id="@+id/btnSignUp"
-            android:textSize="13dp"
+            android:textSize="15dp"
             android:gravity="center"
             android:layout_gravity="center"
             android:fontFamily="@font/robotoregular"

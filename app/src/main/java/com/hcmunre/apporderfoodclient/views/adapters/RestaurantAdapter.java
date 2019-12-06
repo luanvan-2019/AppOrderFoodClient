@@ -61,9 +61,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     public void onBindViewHolder(@NonNull RestaurantAdapter.ViewHolder holder, int position) {
         Common.currentRestaurant = restaurantArrayList.get(position);
         if(Common.currentRestaurant.getmImage()!=null){
-            byte[] decodeString = Base64.decode(Common.currentRestaurant.getmImage(), Base64.DEFAULT);
-            Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-            holder.imageRes.setImageBitmap(decodebitmap);
+            holder.imageRes.setImageBitmap(Common.getBitmap(Common.currentRestaurant.getmImage()));
         }
         holder.txtName_Res.setText(Common.currentRestaurant.getmName());
         holder.txtAddress_Res.setText(Common.currentRestaurant.getmAddress());

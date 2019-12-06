@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hcmunre.apporderfoodclient.R;
+import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Entity.Menu;
 import com.hcmunre.apporderfoodclient.models.eventbus.FoodListEvent;
 import com.hcmunre.apporderfoodclient.views.activities.FoodActivity;
@@ -47,9 +48,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull MenuAdapter.ViewHolder holder, int position) {
         final Menu menu = listMenus.get(position);
         if(menu.getmImage()!=null){
-            byte[] decodeString= Base64.decode(menu.getmImage(),Base64.DEFAULT);
-            Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
-            holder.imageMenu.setImageBitmap(decodeImage);
+            holder.imageMenu.setImageBitmap(Common.getBitmap(menu.getmImage()));
         }
         holder.txtNameMenu.setText(menu.getmName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {

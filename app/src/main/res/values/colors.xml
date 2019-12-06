@@ -9,4 +9,6 @@
     <color name="colorGreyLight">#EEEEEE</color>
     <color name="light_blue">#d7effe</color>
     <color name="dark_blue">#28a7fc</color>
+    <color name="enable">#FF278DCB</color>
+    <color name="mauxanhla">#50D123</color>
 </resources>

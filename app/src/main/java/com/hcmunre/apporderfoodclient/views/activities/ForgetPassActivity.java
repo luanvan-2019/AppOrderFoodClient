@@ -12,11 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.hcmunre.apporderfoodclient.R;
+import com.hcmunre.apporderfoodclient.models.Database.JavaMailAPI;
+import com.hcmunre.apporderfoodclient.models.Database.UserData;
+
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +28,7 @@ public class ForgetPassActivity extends AppCompatActivity {
     TextView btn_send;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    UserData userData=new UserData();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +39,25 @@ public class ForgetPassActivity extends AppCompatActivity {
     }
 
     private void init() {
+        toolbar.setTitle("Quên mật khẩu");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Đăng nhập");
     }
     private void sendEmail(){
-        FirebaseAuth mAuth=FirebaseAuth.getInstance();
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String email=editEmail.getText().toString().trim();
+                int otp=new Random().nextInt(999999);
+                boolean success=userData.updateOTP(email,otp);
+                if(success==true){
+                    JavaMailAPI javaMailAPI = new JavaMailAPI(ForgetPassActivity.this,email,"OTP","OTP xác thực: "+otp,false);
+                    javaMailAPI.execute();
+                }else {
+                    Toast.makeText(ForgetPassActivity.this, "Không thể gửi", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

@@ -1,17 +1,13 @@
 package com.hcmunre.apporderfoodclient.views.fragments;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,23 +19,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
-import com.hcmunre.apporderfoodclient.commons.Progress;
 import com.hcmunre.apporderfoodclient.models.Database.OrderData;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.views.activities.PreferenceUtils;
-import com.hcmunre.apporderfoodclient.views.activities.SignInActivity;
 import com.hcmunre.apporderfoodclient.views.adapters.HistoryCartAdatper;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class HistoryOrder extends Fragment {
     Unbinder unbinder;
@@ -49,8 +38,6 @@ public class HistoryOrder extends Fragment {
     TextView txt_order_history;
     @BindView(R.id.img_delivery)
     ImageView img_delivery;
-    @BindView(R.id.progress)
-    ProgressBar progressBar;
     @BindView(R.id.swipe_layout)
     SwipeRefreshLayout swipe_layout;
     OrderData orderData = new OrderData();
@@ -103,13 +90,11 @@ public class HistoryOrder extends Fragment {
                 historyCartAdatper.refresh(orders);
                 txt_order_history.setVisibility(View.GONE);
                 img_delivery.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 txt_order_history.setVisibility(View.VISIBLE);
                 img_delivery.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
             }
         }
 

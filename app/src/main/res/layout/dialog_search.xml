@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_layout">
 
     <androidx.appcompat.widget.Toolbar
@@ -72,6 +72,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
+    <com.wang.avi.AVLoadingIndicatorView
+        android:layout_centerInParent="true"
+        android:id="@+id/progress_bar"
+        app:indicatorColor="@color/colorPrimary"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="visible" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyc_search"
         android:layout_below="@id/layout_count"

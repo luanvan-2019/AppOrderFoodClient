@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,11 +50,10 @@ import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.OrderDetail;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
+import com.hcmunre.apporderfoodclient.models.eventbus.AddressEvent;
 import com.hcmunre.apporderfoodclient.models.eventbus.SentTotalCashEvent;
 import com.hcmunre.apporderfoodclient.notification.MySingleton;
-import com.hcmunre.apporderfoodclient.views.adapters.CartAdapter;
 import com.hcmunre.apporderfoodclient.views.adapters.OrderDetailFoodAdapter;
-import com.hcmunre.apporderfoodclient.views.fragments.HomeFragment;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -68,7 +66,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -154,9 +156,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Chi tiết đơn hàng");
-        btn_payment.setOnClickListener(view -> paypal());
         txtupdate_phone.setOnClickListener(view -> openUpdatePhoneDialog());
-        txtAddress.setText(Common.currentRestaurant.getmAddress());
         txtPhone.setText(Common.currentRestaurant.getmPhone());
         compositeDisposable = new CompositeDisposable();
         cartDataSource = new LocalCartDataSource(CartData.getInstance(this).cartDAO());
@@ -176,7 +176,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         String date=simpleDateFormat.format(calendar.getTime());
         txt_date.setText(date);
         txt_date.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(DetailOrderActivity.this, (view, year, month, dayOfMonth) -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(DetailOrderActivity.this,android.R.style.Theme_Holo_Light_Dialog_MinWidth, (view, year, month, dayOfMonth) -> {
                 txt_date.setText(new StringBuilder("")
                         .append(dayOfMonth)
                         .append("/")
@@ -208,12 +208,16 @@ public class DetailOrderActivity extends AppCompatActivity {
                     }else {
                         if (btn_cod.isChecked()) {
                             if(Common.isConnectedToInternet(this)){
-                                getOrderNumber(false);
+                                getOrderNumber(0);
                             }else {
                                 Common.showToast(this,getString(R.string.check_internet));
                             }
                         } else if (btn_payment.isChecked()) {
-                            //process online payment
+                            if(Common.isConnectedToInternet(this)){
+                                paypal();
+                            }else {
+                                Common.showToast(this,getString(R.string.check_internet));
+                            }
                         }
                     }
 
@@ -277,11 +281,12 @@ public class DetailOrderActivity extends AppCompatActivity {
 
             }
         }else if(requestCode==PAYPAL_REQUEST_CODE){
-            if(requestCode==RESULT_OK){
+            if(resultCode==RESULT_OK){
                 PaymentConfirmation confirmation=data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if(confirmation!=null){
                     try {
                         String payment=confirmation.toJSONObject().toString(4);
+                        getOrderNumber(1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -290,8 +295,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         }
     }
 
-    private void getOrderNumber(boolean isOnlinePayment) {
-        if (!isOnlinePayment) {
+    private void getOrderNumber(int payment) {
             orderData = new OrderData();
             compositeDisposable.add(cartDataSource.getAllCart(PreferenceUtils.getEmail(this),
                     Common.currentRestaurant.getmId())
@@ -299,7 +303,7 @@ public class DetailOrderActivity extends AppCompatActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(cartItems -> {
                         if (cartItems.isEmpty()) {
-                            Toast.makeText(this, "Giỏ hàng trống", Toast.LENGTH_SHORT).show();
+                            Common.showToast(this,"Giỏ hàng trống");
                         } else {
                             Order order = new Order();
                             order.setUserId(PreferenceUtils.getUserId(this));
@@ -308,12 +312,10 @@ public class DetailOrderActivity extends AppCompatActivity {
                             order.setOrderPhone(txtPhone.getText().toString());
                             order.setOrderAddress(txtAddress.getText().toString());
                             order.setOrderDate(txt_date.getText().toString().trim());
-                            int length = txtTotalPrice.getText().toString().length();
-                            String txt_TotalPrice = txtTotalPrice.getText().toString();
                             order.setOrderStatus(0);
-                            order.setTotalPrice(Float.parseFloat(txt_TotalPrice.substring(0, length - 1)));
+                            order.setTotalPrice(Common.curentOrder.getTotalPrice());
                             order.setNumberOfItem(cartItems.size());
-                            order.setPayment(0);
+                            order.setPayment(payment);
                             Observable<Boolean> insertOrderShip = Observable.just(orderData.insertOrder(order));
                             compositeDisposable.add(
                                     insertOrderShip
@@ -336,44 +338,43 @@ public class DetailOrderActivity extends AppCompatActivity {
                                                                 public void onSuccess(Integer integer) {
 
                                                                     new getOrderNumberBK(DetailOrderActivity.this, cartItems);
-                                                                    Toast.makeText(DetailOrderActivity.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                                                    Common.showToast(DetailOrderActivity.this,"Đặt hàng thành công");
+                                                                    NOTIFICATION_TITLE = "App Food";
+                                                                    NOTIFICATION_MESSAGE ="Bạn có đơn hàng mới "+Common.curentOrder.getId()+" ?";
+
+                                                                    JSONObject notification = new JSONObject();
+                                                                    JSONObject notifcationBody = new JSONObject();
+                                                                    try {
+                                                                        notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                                        notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                                        notification.put("to", Common.createTopicSender(Common.getTopicChannel(Common.currentRestaurant.getmId())));
+                                                                        notification.put("data", notifcationBody);
+                                                                    } catch (JSONException e) {
+                                                                        Log.e(TAG, "onCreate: " + e.getMessage());
+                                                                    }
+                                                                    sendNotification(notification);
                                                                     startActivity(new Intent(DetailOrderActivity.this, TrackingOrderActivity.class));
                                                                     finish();
                                                                 }
 
                                                                 @Override
                                                                 public void onError(Throwable e) {
-                                                                    Toast.makeText(DetailOrderActivity.this, "CLEAR CART" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                    Common.showToast(DetailOrderActivity.this,"Xóa giỏ hàng");
                                                                 }
                                                             });
                                                 } else {
-                                                    Toast.makeText(this, "Không thêm được", Toast.LENGTH_SHORT).show();
+                                                    Common.showToast(this,"Không thêm được");
                                                 }
                                             })
                             );
                         }
                     }, throwable -> {
-                        Toast.makeText(this, "[GET ALL CART] " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        Common.showToast(this,"Lỗi giỏ hàng");
                     })
 
             );
         }
-
-
-    }
-
-    private void openDialogCardForm() {
-
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.CustomDialogAnimation);
-        LayoutInflater layoutInflater = this.getLayoutInflater();
-        View dialog_payment = layoutInflater.inflate(R.layout.dialog_payment, null);
-        alertDialog.setView(dialog_payment);
-        final AlertDialog dialog = alertDialog.create();
-        dialog.setCancelable(true);
-        dialog.show();
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, 1000);
-    }
 
     private void openUpdatePhoneDialog() {
 
@@ -428,7 +429,11 @@ public class DetailOrderActivity extends AppCompatActivity {
 
         txtTotalPrice.setText(event.getCash());
     }
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void getAddress(AddressEvent event) {
 
+        txtAddress.setText(event.getAddess());
+    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home)
@@ -459,21 +464,7 @@ public class DetailOrderActivity extends AppCompatActivity {
             if (orderDetails.size() > 0) {
                 orderData.insertOrderDetail(orderDetails);
                 //
-                NOTIFICATION_TITLE = "App Food";
-                NOTIFICATION_MESSAGE ="Bạn có đơn hàng mới "+Common.curentOrder.getId()+" ?";
 
-                JSONObject notification = new JSONObject();
-                JSONObject notifcationBody = new JSONObject();
-                try {
-                    notifcationBody.put("title", NOTIFICATION_TITLE);
-                    notifcationBody.put("message", NOTIFICATION_MESSAGE);
-
-                    notification.put("to", Common.createTopicSender(Common.getTopicChannel(Common.currentRestaurant.getmId())));
-                    notification.put("data", notifcationBody);
-                } catch (JSONException e) {
-                    Log.e(TAG, "onCreate: " + e.getMessage());
-                }
-                sendNotification(notification);
             } else {
                 Log.d("BBB", "Không thể thực hiện");
             }
@@ -535,6 +526,8 @@ public class DetailOrderActivity extends AppCompatActivity {
         Intent intent=new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
         intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
-        startActivity(intent);
+        startActivityForResult(intent,PAYPAL_REQUEST_CODE);
     }
+    // HTTP GET request
+
 }

@@ -6,7 +6,6 @@ public class Menu implements Serializable {
     private int mId;
     private String mName;
     private String mImage;
-
     public Menu() {
     }
 

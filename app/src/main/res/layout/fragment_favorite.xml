@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".views.fragments.FavoriteFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Món ăn yêu thích"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:id="@+id/toolbar_title"/>
+    </androidx.appcompat.widget.Toolbar>
+   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+       android:layout_below="@id/toolbar"
+       android:id="@+id/swipe_layout"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/recyc_favorite"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"/>
+           <LinearLayout
+               android:gravity="center"
+               android:layout_centerInParent="true"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <ImageView
+                   android:layout_width="match_parent"
+                   android:layout_height="80dp"
+                   android:id="@+id/img_delivery"
+                   android:src="@drawable/ic_love"/>
+               <TextView
+                   android:layout_below="@id/img_delivery"
+                   android:id="@+id/txt_order_history"
+                   android:fontFamily="@font/robotoregular"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Chưa có món ăn yêu thích"
+                   android:textSize="20sp"/>
+           </LinearLayout>
+       </RelativeLayout>
+   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</FrameLayout>
+</RelativeLayout>

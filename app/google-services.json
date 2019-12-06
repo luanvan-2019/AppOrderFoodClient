@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "30470819406-h05v0fln2fie0pc0kbaihl3s4cvr17fp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmunre.apporderfoodclient",
+            "certificate_hash": "c1485e937447750eb1020a0d70e8e807990f3fcc"
+          }
+        },
+        {
           "client_id": "30470819406-t63mbnug9iaac9e0kq6siprqiq1paee0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -28,6 +36,125 @@
           "android_info": {
             "package_name": "com.hcmunre.apporderfoodclient",
             "certificate_hash": "6893c262c27ab64b684879c65c174230eb7f8a47"
+          }
+        },
+        {
+          "client_id": "30470819406-ur284l03l2brbbc0q7jtjols1psukk7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB8ysO6xhP0Y8csHuwUwfxoTZlIEx1CgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30470819406-ur284l03l2brbbc0q7jtjols1psukk7h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30470819406:android:ac834d9811c735b4b6fd1f",
+        "android_client_info": {
+          "package_name": "com.hcmunre.apporderfoodserver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30470819406-dhpjoclv3qhgfdlq4nbdttug9d9sa57v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmunre.apporderfoodserver",
+            "certificate_hash": "c1485e937447750eb1020a0d70e8e807990f3fcc"
+          }
+        },
+        {
+          "client_id": "30470819406-ur284l03l2brbbc0q7jtjols1psukk7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB8ysO6xhP0Y8csHuwUwfxoTZlIEx1CgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30470819406-ur284l03l2brbbc0q7jtjols1psukk7h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30470819406:android:d5554f95fc8bd9b8b6fd1f",
+        "android_client_info": {
+          "package_name": "com.hcmunre.apporderfoodshipper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30470819406-hk2i912fabfju5577ci137v6ekf1fqeo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hcmunre.apporderfoodshipper",
+            "certificate_hash": "c1485e937447750eb1020a0d70e8e807990f3fcc"
+          }
+        },
+        {
+          "client_id": "30470819406-ur284l03l2brbbc0q7jtjols1psukk7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB8ysO6xhP0Y8csHuwUwfxoTZlIEx1CgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30470819406-ur284l03l2brbbc0q7jtjols1psukk7h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30470819406:android:2aa4cc9a1834a186b6fd1f",
+        "android_client_info": {
+          "package_name": "com.sample.notify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30470819406-jbom1pkn58bp8olj030kmm3lqjs7ih80.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sample.notify",
+            "certificate_hash": "c1485e937447750eb1020a0d70e8e807990f3fcc"
+          }
+        },
+        {
+          "client_id": "30470819406-hp5evlqaq05lgsresnulstmetj0ek0a6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sample.notify",
+            "certificate_hash": "b36e3bf470e65fd4d73def454255085087f22474"
           }
         },
         {

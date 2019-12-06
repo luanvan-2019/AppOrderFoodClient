@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="?attr/homeAsUpIndicator"/>
+
+    <TextView
+        android:fontFamily="@font/robotoregular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Nhập mã 6 số mà chúng tôi đã gửi cho bạn đến"
+        android:textColor="#000000"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/txt_email"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/robotoregular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="huutrong1097@gmail.com"
+        android:textSize="15sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:gravity="center">
+        <com.hololo.library.otpview.OTPView
+            android:id="@+id/otp_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:hintColor="#000000"
+            app:inputType="number"
+            app:viewsPadding="30"
+            app:count="6"
+            app:textColor="#000000"
+            app:otpHint="-"
+            app:textSize="8"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_resend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Gửi lại"
+        android:textColor="#e65e52"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

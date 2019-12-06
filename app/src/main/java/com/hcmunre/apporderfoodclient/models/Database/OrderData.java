@@ -35,7 +35,10 @@ public class OrderData {
             if(rs.next()){
                 Common.curentOrder=new Order();
                 Common.curentOrder.setId(rs.getInt("OrderNumber"));
-                Common.curentOrder.setOrderName("OrderName");
+                Common.curentOrder.setOrderName(rs.getString("OrderName"));
+                Common.curentOrder.setTotalPrice(rs.getFloat("TotalPrice"));
+                Common.curentOrder.setNameRestaurant(rs.getString("Name"));
+                Common.curentOrder.setRestaurantAddress(rs.getString("Address"));
                 con.close();
                 success=true;
             } else{
@@ -79,6 +82,7 @@ public class OrderData {
                 order1.setUserId(rs.getInt("UserId"));
                 order1.setRestaurantId(rs.getInt("RestaurantId"));
                 order1.setNameRestaurant(rs.getString("Name"));
+                order1.setRestaurantAddress(rs.getString("Address"));
                 order1.setImage(rs.getString("Image"));
                 order1.setOrderName(rs.getString("OrderName"));
                 order1.setOrderPhone(rs.getString("OrderPhone"));
@@ -93,5 +97,21 @@ public class OrderData {
             e.printStackTrace();
         }
         return listOrders;
+    }
+    public Order getOrderStatus(int orderId){
+        Order order=null;
+        try {
+            String sql="Exec Sp_SelectStatusOrder '"+orderId+"'";
+            con=dataConnetion.connectionData();
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            if(rs.next()){
+                order=new Order();
+                order.setOrderStatus(rs.getInt("OrderStatus"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return order;
     }
 }

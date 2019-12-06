@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
+import com.hcmunre.apporderfoodclient.interfaces.LocalStatusDataSource;
+import com.hcmunre.apporderfoodclient.interfaces.StatusDataSource;
+import com.hcmunre.apporderfoodclient.models.Database.ShipperData;
+import com.hcmunre.apporderfoodclient.models.Entity.CartData;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
+import com.hcmunre.apporderfoodclient.models.Entity.Shipper;
 import com.hcmunre.apporderfoodclient.views.activities.TrackingOrderActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +36,14 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.ViewHolder> {
     private Context context;
     private ArrayList<Order> listOrderHistory;
-
+    ShipperData shipperData=new ShipperData();
     public HistoryCartAdatper(Context context, ArrayList<Order> listOrderHistory) {
         this.context = context;
         this.listOrderHistory = listOrderHistory;
@@ -49,22 +60,17 @@ public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.
     @Override
     public void onBindViewHolder(@NonNull HistoryCartAdatper.ViewHolder holder, int position) {
         Order order=listOrderHistory.get(position);
-        if(Common.currentRestaurant.getmImage()!=null){
-            byte[] decodeString = Base64.decode(order.getImage(), Base64.DEFAULT);
-            Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-            holder.image_restaurant.setImageBitmap(decodebitmap);
+        if(order.getImage()!=null){
+            holder.image_restaurant.setImageBitmap(Common.getBitmap(order.getImage()));
         }
         if(order.getOrderDate()!=null){
             holder.txt_order_date.setText(order.getOrderDate());
         }
-        holder.txt_quantity.setText(new StringBuilder("").append(order.getNumberOfItem()).append(" phần x "));
-        holder.txt_total_price.setText(new StringBuilder(holder.numberFormat.format(order.getTotalPrice())).append("đ"));
+        Locale locale=new Locale("vi","VN");
+        NumberFormat numberFormat=NumberFormat.getInstance(locale);
+        holder.txt_quantity.setText(new StringBuilder("").append(order.getNumberOfItem()).append(" phần x ")
+        .append(numberFormat.format(order.getTotalPrice())).append("đ"));
         holder.txt_name_restaurant.setText(order.getNameRestaurant());
-//        if(Common.curentOrder.getId()==3){
-//            holder.image_complete.setVisibility(View.VISIBLE);
-//        }else {
-//            holder.image_complete.setVisibility(View.GONE);
-//        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,10 +78,39 @@ public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.
                 context.startActivity(new Intent(context, TrackingOrderActivity.class));
             }
         });
+        new getInforShipping(holder.image_complete,order.getId());
     }
     public void refresh(ArrayList<Order> orders) {
         this.listOrderHistory = orders;
         notifyDataSetChanged();
+    }
+    public class getInforShipping extends AsyncTask<String, String, Shipper> {
+        ImageView image_complete;
+        int orderId;
+
+        public getInforShipping(ImageView image_complete, int orderId) {
+            this.image_complete = image_complete;
+            this.orderId = orderId;
+            this.execute();
+        }
+
+        @Override
+        protected void onPostExecute(Shipper shipper) {
+            if(shipper!=null){
+                if(shipper.getShippingStatus()==3){
+                    image_complete.setVisibility(View.VISIBLE);
+                }else {
+                    image_complete.setVisibility(View.GONE);
+                }
+            }
+        }
+
+        @Override
+        protected Shipper doInBackground(String... strings) {
+            Shipper shipper;
+            shipper = shipperData.getInforShipperOrder(orderId);
+            return shipper;
+        }
     }
     @Override
     public int getItemCount() {
@@ -89,8 +124,6 @@ public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.
         TextView txt_order_date;
         @BindView(R.id.txt_quantity)
         TextView txt_quantity;
-        @BindView(R.id.txt_total_price)
-        TextView txt_total_price;
         @BindView(R.id.image_restaurant)
         RoundedImageView image_restaurant;
         @BindView(R.id.image_complete)
@@ -102,4 +135,6 @@ public class HistoryCartAdatper extends RecyclerView.Adapter<HistoryCartAdatper.
             ButterKnife.bind(this,itemView);
         }
     }
+
+
 }

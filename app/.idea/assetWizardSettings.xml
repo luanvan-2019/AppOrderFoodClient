@@ -189,7 +189,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_remove_circle_outline_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/communication/ic_chat_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -199,8 +199,10 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_remove_circle" />
-                            <entry key="sourceFile" value="C:\Users\huutr\Desktop\turn-off.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="color" value="f05421" />
+                            <entry key="outputName" value="ic_love" />
+                            <entry key="sourceFile" value="E:\love_dating-22-512.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -1,5 +1,7 @@
 package com.hcmunre.apporderfoodclient.views.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -17,10 +19,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -46,6 +55,7 @@ import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Database.RestaurantData;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.models.eventbus.MenuItemEvent;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -145,7 +155,6 @@ public class NearRestaurantActivity extends AppCompatActivity implements OnMapRe
                             .append(restaurant.getmId())
                             .append(".")
                             .append(restaurant.getmName()).toString()));
-
         }
     }
     private void adMarker(Location lastLocation) {

@@ -1,14 +1,11 @@
 package com.hcmunre.apporderfoodclient.views.activities;
 
-import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,14 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,16 +22,22 @@ import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Database.UserData;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.paperdb.Paper;
-import io.reactivex.disposables.CompositeDisposable;
 
 public class SignInActivity extends AppCompatActivity {
     private static final int API_REQUEST_CODE = 1234;
@@ -60,9 +55,6 @@ public class SignInActivity extends AppCompatActivity {
     TextView txtSignup;
     @BindView(R.id.txtForgetPass)
     TextView txtForgetPass;
-    @BindView(R.id.btn_login_facebook)
-    LoginButton btn_login_facebook;
-    private CallbackManager mCallbackManager;
     private List<AuthUI.IdpConfig> providers;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -72,7 +64,6 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
         init();
-//        setBtn_login_facebook();
 
 
     }
@@ -111,40 +102,6 @@ public class SignInActivity extends AppCompatActivity {
             }
         };
     }
-//    private void setBtn_login_facebook(){
-//        btn_login_facebook.setReadPermissions("user_friends");
-//        mCallbackManager = CallbackManager.Factory.create();
-//        btn_login_facebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                Profile profile=Profile.getCurrentProfile();
-//                userInfor(profile);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                Log.d("BBB","Login canceled.");
-//            }
-//
-//            @Override
-//            public void onError(FacebookException e) {
-//
-//            }
-//        });
-//    }
-
-//    private void userInfor(Profile profile){
-//        if(profile!=null){
-//            Intent intent=new Intent(this,HomeActivity.class);
-//            PreferenceUtils.saveFBId(profile.getId(),this);
-//            PreferenceUtils.saveName(profile.getName(),this);
-//            intent.putExtra("name",profile.getFirstName());
-//            intent.putExtra("surname",profile.getLastName());
-//            intent.putExtra("imageUrl",profile.getProfilePictureUri(200,200).toString());
-//            startActivity(intent);
-//
-//        }
-//    }
 
     private void loginWithPhone() {
         btnLoginPhone.setOnClickListener(view ->
@@ -235,7 +192,6 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == API_REQUEST_CODE) {
             IdpResponse response = IdpResponse.fromResultIntent(data);

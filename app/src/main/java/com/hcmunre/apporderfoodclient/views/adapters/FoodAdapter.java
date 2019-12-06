@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,18 +21,20 @@ import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.interfaces.CartDataSource;
 import com.hcmunre.apporderfoodclient.interfaces.cartClickListerner;
+import com.hcmunre.apporderfoodclient.models.Database.FoodData;
 import com.hcmunre.apporderfoodclient.models.Entity.CartData;
 import com.hcmunre.apporderfoodclient.models.Entity.CartItem;
+import com.hcmunre.apporderfoodclient.models.Entity.Favorite;
 import com.hcmunre.apporderfoodclient.models.Entity.Food;
 import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
-import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
-import com.hcmunre.apporderfoodclient.models.Entity.User;
+import com.hcmunre.apporderfoodclient.models.Entity.FavoriteOnlyId;
 import com.hcmunre.apporderfoodclient.models.eventbus.CalculatePriceEvent;
 import com.hcmunre.apporderfoodclient.views.activities.PreferenceUtils;
 import com.hcmunre.apporderfoodclient.views.activities.SignInActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -49,6 +51,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
     private Activity activity;
     CompositeDisposable compositeDisposable;
     CartDataSource cartDataSource;
+    FoodData foodData=new FoodData();
     public void onStop(){
         compositeDisposable.clear();
     }
@@ -74,13 +77,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         holder.txtitem_name.setText(food.getName());
         holder.txtitem_price.setText(new StringBuilder(holder.currencyVN.format(food.getPrice())).append("đ"));
         holder.txtdescription.setText(food.getDescription());
-        byte[] decodeString= Base64.decode(food.getImage(),Base64.DEFAULT);
-        Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
-        holder.img_food.setImageBitmap(decodeImage);
+        if(food.getImage()!=null){
+            holder.img_food.setImageBitmap(Common.getBitmap(food.getImage()));
+        }
         holder.txt_status_food.setText(Common.convertStatusFoodToString(food.getStatus()));
         if(holder.txt_status_food.getText().toString()=="Hết món"){
             holder.txt_status_food.setVisibility(View.VISIBLE);
             holder.btnAddCart.setVisibility(View.GONE);
+            holder.btn_fav.setVisibility(View.GONE);
         }else {
             holder.txt_status_food.setVisibility(View.GONE);
             holder.btnAddCart.setVisibility(View.VISIBLE);
@@ -115,6 +119,67 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
 
             });
         }
+        if(Common.currentFavorite!=null&&Common.currentFavorite.size()>0){
+            if(Common.checkFavorite(food.getId())){
+                holder.btn_fav.setImageResource(R.drawable.ic_favorite_orange);
+                holder.btn_fav.setTag(true);
+            }else {
+                holder.btn_fav.setImageResource(R.drawable.ic_favorite_border);
+                holder.btn_fav.setTag(false);
+            }
+        }else {
+            holder.btn_fav.setTag(false);
+        }
+        holder.btn_fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView imageView=(ImageView)v;
+                if(PreferenceUtils.getEmail(activity)!=null){
+                    if((Boolean)v.getTag()){
+                        Favorite favorite=new Favorite();
+                        favorite.setUserId(PreferenceUtils.getUserId(activity));
+                        favorite.setRestaurantId(Common.currentRestaurant.getmId());
+                        favorite.setFoodId(food.getId());
+                        boolean success=foodData.deleteFavorite(favorite);
+                        Log.d("BBB",success+"XÓA");
+                        if(success==false){
+                            Common.showToast(activity,"Đã xóa món ăn yêu thích");
+                            imageView.setImageResource(R.drawable.ic_favorite_border);
+                            imageView.setTag(false);
+                            if(Common.currentFavorite!=null){
+                                Common.removeFavorite(food.getId());
+                            }
+                        }else {
+                            Common.showToast(activity,"Không thể xóa");
+                        }
+                    }else {
+                        Favorite favorite=new Favorite();
+                        favorite.setUserId(PreferenceUtils.getUserId(activity));
+                        favorite.setRestaurantId(Common.currentRestaurant.getmId());
+                        favorite.setFoodId(food.getId());
+                        favorite.setRestaurantName(Common.currentRestaurant.getmName());
+                        favorite.setFoodName(food.getName());
+                        favorite.setFoodImage(food.getImage());
+                        favorite.setPrice(food.getPrice());
+                        boolean success=foodData.insertFavorite(favorite);
+                        if(success==false){
+                            Common.showToast(activity,"Đã thêm món ăn yêu thích");
+                            imageView.setImageResource(R.drawable.ic_favorite_orange);
+                            imageView.setTag(true);
+                            if(Common.currentFavorite!=null){
+                                Common.currentFavorite.add(new FavoriteOnlyId(food.getId()));
+                            }
+                        }else {
+                            Common.showToast(activity,"Không thể thêm");
+                        }
+                    }
+                }else {
+                    activity.startActivity(new Intent(activity,SignInActivity.class));
+                }
+
+
+            }
+        });
 
 
     }
@@ -131,8 +196,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         TextView txtitem_price;
         @BindView(R.id.img_food)
         ImageView img_food;
-        @BindView(R.id.quantityTxt)
-        TextView quantityTxt;
+        @BindView(R.id.btn_fav)
+        ImageView btn_fav;
         @BindView(R.id.btnAddCart)
         ImageView btnAddCart;
         @BindView(R.id.txtdescription)

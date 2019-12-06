@@ -3,42 +3,41 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/img_delivery"
-            android:src="@drawable/ic_shipping"/>
-        <TextView
-            android:layout_below="@id/img_delivery"
-            android:id="@+id/txt_order_history"
-            android:fontFamily="@font/robotoregular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chưa có lịch sử đơn hàng"
-            android:textSize="25sp"/>
-    </LinearLayout>
-    <ProgressBar
-        android:id="@+id/progress"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyc_history_order"
+        android:layout_height="match_parent">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyc_history_order"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </androidx.recyclerview.widget.RecyclerView>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/img_delivery"
+                    android:src="@drawable/xemay"/>
+                <TextView
+                    android:layout_below="@id/img_delivery"
+                    android:id="@+id/txt_order_history"
+                    android:fontFamily="@font/robotoregular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chưa có lịch sử đơn hàng"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+        </RelativeLayout>
 
-        </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

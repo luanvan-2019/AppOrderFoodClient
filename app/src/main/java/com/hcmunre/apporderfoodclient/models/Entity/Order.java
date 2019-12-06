@@ -4,7 +4,7 @@ public class Order {
     private int id;
     private int userId;
     private int restaurantId,orderStatus;
-    private String orderName,orderPhone,orderAddress,orderDate,nameRestaurant,image;
+    private String orderName,orderPhone,orderAddress,orderDate,nameRestaurant,restaurantAddress,image;
     private Float totalPrice;
     private int numberOfItem;
     private int payment;
@@ -111,5 +111,13 @@ public class Order {
 
     public void setPayment(int payment) {
         this.payment = payment;
+    }
+
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 }

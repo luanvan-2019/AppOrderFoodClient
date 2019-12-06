@@ -37,11 +37,12 @@
                     android:textColor="@color/white"
                     android:background="@drawable/background_button_cart"
                     android:id="@+id/txt_login"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Đăng nhập"/>
                 <TextView
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:layout_marginTop="5dp"
                     android:layout_centerInParent="true"
                     android:textColor="#000000"
@@ -72,7 +73,7 @@
                 android:layout_gravity="center_vertical"
                 android:text="Ứng dụng cho chủ quán"
                 android:fontFamily="@font/robotoregular"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:textAllCaps="false"
                 android:textColor="#000000"/>
             <LinearLayout
@@ -87,6 +88,7 @@
 
         </LinearLayout>
         <TextView
+            android:textSize="15sp"
             android:layout_marginTop="40dp"
             android:id="@+id/btnlogout"
             android:layout_gravity="center"

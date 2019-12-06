@@ -18,7 +18,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/pexel"
+            android:src="@drawable/image_default"
             app:riv_corner_radius="6dip" />
 
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="Canh bún"
                 android:textColor="#262628"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/txt_food_price"
@@ -43,13 +43,14 @@
                 android:layout_marginTop="6dp"
                 android:text="50.00"
                 android:textColor="#9b9b9b"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
             <LinearLayout
                 android:layout_marginTop="6dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textSize="15sp"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="14dp"
+                    android:textSize="15dp"
                     android:textColor="#000000"
                     android:text="0"/>
             </LinearLayout>

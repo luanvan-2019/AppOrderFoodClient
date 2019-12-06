@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +28,17 @@ import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.interfaces.ShowFragment;
 import com.hcmunre.apporderfoodclient.models.Database.RestaurantData;
 import com.hcmunre.apporderfoodclient.models.Entity.HomePageModel;
+import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.models.Entity.Slider;
+import com.hcmunre.apporderfoodclient.models.eventbus.AddressEvent;
+import com.hcmunre.apporderfoodclient.models.eventbus.FoodListEvent;
 import com.hcmunre.apporderfoodclient.views.activities.GetCurrentUser;
 import com.hcmunre.apporderfoodclient.views.adapters.HomePageAdapter;
 import com.hcmunre.apporderfoodclient.views.adapters.RestaurantAdapter;
+import com.wang.avi.AVLoadingIndicatorView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -57,6 +64,7 @@ public class HomeFragment extends Fragment {
     ProgressBar progress_search;
     RestaurantData restaurantData = new RestaurantData();
     String address;
+    AVLoadingIndicatorView av;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,6 +96,9 @@ public class HomeFragment extends Fragment {
         //
         GetCurrentUser getCurrentUser=new GetCurrentUser(getActivity());
         address=getCurrentUser.getuser();
+        EventBus.getDefault().postSticky(new AddressEvent(address));
+//        Common.curentOrder=new Order();
+//        Common.curentOrder.setOrderAddress(address);
         txt_address.setText(address);
     }
     private void fragment(){
@@ -114,6 +125,7 @@ public class HomeFragment extends Fragment {
             dialog.setCanceledOnTouchOutside(true);
             dialog.show();
             TextView mClose = dialog.findViewById(R.id.txtCancel);
+            av=dialog.findViewById(R.id.progress_bar);
             mClose.setOnClickListener(view1 -> dialog.dismiss());
             EditText editSearch = dialog.findViewById(R.id.editSearch);
             progress_search = dialog.findViewById(R.id.progress);
@@ -122,6 +134,7 @@ public class HomeFragment extends Fragment {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyc_search.setLayoutManager(layoutManager);
             recyc_search.setHasFixedSize(true);
+            av.hide();
             editSearch.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -152,6 +165,12 @@ public class HomeFragment extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            av.show();
+            super.onPreExecute();
+        }
+
+        @Override
         protected void onPostExecute(ArrayList<Restaurant> restaurants) {
             super.onPostExecute(restaurants);
             restaurantSearch = new RestaurantAdapter(getActivity(), restaurants);
@@ -159,6 +178,7 @@ public class HomeFragment extends Fragment {
             recyc_search.setAdapter(restaurantSearch);
             txtCountRestaurant.setText(restaurantSearch.getItemCount() + "");
             progress_search.setVisibility(View.GONE);
+            av.hide();
         }
 
         @Override

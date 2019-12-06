@@ -10,6 +10,7 @@ public class User implements Serializable {
     private String mImage;
     private String mEmail;
     private String mPassword;
+    private int otp;
     public User(){
     }
 
@@ -78,4 +79,11 @@ public class User implements Serializable {
         this.mPassword = mPassword;
     }
 
+    public int getOtp() {
+        return otp;
+    }
+
+    public void setOtp(int otp) {
+        this.otp = otp;
+    }
 }

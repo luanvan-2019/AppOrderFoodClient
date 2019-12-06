@@ -6,13 +6,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.util.Base64;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.hcmunre.apporderfoodclient.R;
@@ -20,6 +25,14 @@ import com.hcmunre.apporderfoodclient.models.Entity.Category;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 import com.hcmunre.apporderfoodclient.models.Entity.User;
+import com.hcmunre.apporderfoodclient.models.Entity.FavoriteOnlyId;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Common {
     public static final String NOTIFI_TITLE = "title";
@@ -33,6 +46,14 @@ public class Common {
     public static final String KEY_RESTAURANT = "data_restaurant";
     public static final String REMEMBER_FBID = "FBID";
     public static final String TAG="ERROR";
+    String address;
+    public void setAddress(String address){
+        this.address=address;
+    }
+    public String getAddress(){
+        return address;
+    }
+    public static List<FavoriteOnlyId> currentFavorite;
     public static boolean isConnectedToInternet(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -97,8 +118,53 @@ public class Common {
     public static String getTopicChannel(int id) {
         return new StringBuilder("Restaurant").append(id).toString();
     }
-
+    public static String getTopicChannelUser(int id) {
+        return new StringBuilder("User").append(id).toString();
+    }
     public static String createTopicSender(String topicChannel) {
         return new StringBuilder("/topics/").append(topicChannel).toString();
+    }
+
+    public static boolean checkFavorite(int id) {
+        boolean result=false;
+        for (FavoriteOnlyId item:currentFavorite){
+            if(item.getFoodId()==id){
+                result=true;
+            }
+        }
+        return result;
+    }
+
+    public static void removeFavorite(int id) {
+        for (FavoriteOnlyId item:currentFavorite){
+            if(item.getFoodId()==id){
+                currentFavorite.remove(item);
+            }
+        }
+    }
+    public static Bitmap getBitmap(String image){
+        byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
+        Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+        return decodebitmap;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void checkTime(TextView textView,String opening, String closing){
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDate today = LocalDate.now(zone);
+        LocalTime fourPM = LocalTime.parse(opening);
+        LocalTime twoAM = LocalTime.parse(closing);
+        ZonedDateTime rest1Start = today.atTime(twoAM).atZone(zone);
+        ZonedDateTime rest1End = today.atTime(fourPM).atZone(zone);
+        // time to check
+        String timeToCheck = "23:00";
+        ZonedDateTime zdt = today.atTime(LocalTime.parse(timeToCheck)).atZone(zone);
+        Log.d("BBB","zdt"+zdt);
+        if (rest1End.isBefore(zdt)) {
+            Log.d("BBB",rest1Start.isAfter(zdt) +"isAfter");
+            Log.d("BBB",rest1End.isBefore(zdt) +"isBefore");
+            textView.setText("Đã đóng cửa");
+        } else {
+            textView.setText("Đang mở");
+        }
     }
 }

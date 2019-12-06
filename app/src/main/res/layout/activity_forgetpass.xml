@@ -23,30 +23,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:text="Lấy lại mật khẩu"
+            android:gravity="center"
+            android:text="Vui lòng nhập email vào ô bên dưới,chúng tôi sẽ gửi mã xác thực để đổi mật khẩu"
             android:fontFamily="@font/robotoregular"
             android:textColor="#000000"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
-            app:passwordToggleEnabled="true">
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email của bạn"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            android:layout_marginTop="20dp"
             android:id="@+id/btn_send"
-            android:textSize="13dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_gravity="center"

@@ -2,6 +2,7 @@ package com.hcmunre.apporderfoodclient.models.Database;
 
 import com.hcmunre.apporderfoodclient.interfaces.LoadingProgress;
 import com.hcmunre.apporderfoodclient.models.Entity.Category;
+import com.hcmunre.apporderfoodclient.models.Entity.ChatMessage;
 import com.hcmunre.apporderfoodclient.models.Entity.Restaurant;
 
 import java.sql.Connection;
@@ -146,5 +147,21 @@ public class RestaurantData {
             e.printStackTrace();
         }
         return categories;
+    }
+    public ChatMessage getReceiver(String email){
+        ChatMessage chatMessage = null;
+        try {
+            String sql="Exec Sp_SelectReceiverStaff '"+email+"'";
+            con=dataCon.connectionData();
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            if(rs.next()){
+                chatMessage=new ChatMessage();
+                chatMessage.setReceiver(rs.getString("NameOwner"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chatMessage;
     }
 }

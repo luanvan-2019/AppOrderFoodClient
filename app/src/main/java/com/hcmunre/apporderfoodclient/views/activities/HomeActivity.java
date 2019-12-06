@@ -7,27 +7,25 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hcmunre.apporderfoodclient.R;
-import com.hcmunre.apporderfoodclient.interfaces.ShowFragment;
+import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.views.fragments.AccountFragment;
-import com.hcmunre.apporderfoodclient.views.fragments.FravoriteFragment;
-import com.hcmunre.apporderfoodclient.views.fragments.HistoryOrder;
+import com.hcmunre.apporderfoodclient.views.fragments.FavoriteFragment;
 import com.hcmunre.apporderfoodclient.views.fragments.HomeFragment;
 import com.hcmunre.apporderfoodclient.views.fragments.OrderFragment;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG_HISTORY_ORDER = "tag_history_order";
@@ -55,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
 
         }
+        FirebaseMessaging.getInstance().subscribeToTopic(Common.getTopicChannelUser(PreferenceUtils.getUserId(this)));
 
     }
 
@@ -78,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                             startActivity(new Intent(this,SignInActivity.class));
                             finish();
                         }else {
-                            selectedFragment = new FravoriteFragment();
+                            selectedFragment = new FavoriteFragment();
                             break;
                         }
                     case R.id.nav_user:

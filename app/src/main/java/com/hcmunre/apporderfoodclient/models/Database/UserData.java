@@ -125,4 +125,54 @@ public class UserData {
         }
         return success;
     }
+    public boolean updateOTP(String email,int otp){
+        boolean success=false;
+        try {
+            String sql="Exec Sp_UpdateOTP '"+email+"','"+otp+"'";
+            PreparedStatement pst=con.prepareStatement(sql);
+            if(pst.executeUpdate()>0){
+                con.close();
+                success=true;
+            }else {
+                con.close();
+                success=false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+    public User getOTP(String email){
+        User user=null;
+        try {
+            String sql="Exec Sp_SelectOTP '"+email+"'";
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            if(rs.next()){
+                user=new User();
+                user.setOtp(rs.getInt("OTP"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+    public boolean resetPassword(User user){
+        boolean success=false;
+        try {
+            String sql="Exec Sp_ResetPassword '"+user.getmEmail()+"','"+HashPass.md5(user.getmPassword())+"'";
+            PreparedStatement pst=con.prepareStatement(sql);
+            if(pst.executeUpdate()>0){
+                con.close();;
+                success=true;
+            }else {
+                con.close();;
+                success=false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }

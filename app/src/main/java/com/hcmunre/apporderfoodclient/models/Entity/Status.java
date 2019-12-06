@@ -15,6 +15,8 @@ public class Status {
     private int orderId;
     @ColumnInfo(name = "status")
     private int status;
+    @ColumnInfo (name="statusRes")
+    private int statusRes;
 
     public Status() {
     }
@@ -41,5 +43,13 @@ public class Status {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getStatusRes() {
+        return statusRes;
+    }
+
+    public void setStatusRes(int statusRes) {
+        this.statusRes = statusRes;
     }
 }

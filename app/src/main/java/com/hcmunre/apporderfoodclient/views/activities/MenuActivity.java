@@ -9,19 +9,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TimeFormatException;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -39,6 +37,7 @@ import com.hcmunre.apporderfoodclient.models.Database.FoodData;
 import com.hcmunre.apporderfoodclient.models.Entity.CartData;
 import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
 import com.hcmunre.apporderfoodclient.models.Entity.Menu;
+import com.hcmunre.apporderfoodclient.models.Entity.FavoriteOnlyId;
 import com.hcmunre.apporderfoodclient.models.eventbus.MenuItemEvent;
 import com.hcmunre.apporderfoodclient.views.adapters.MenuAdapter;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -47,15 +46,19 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.sql.SQLException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -79,6 +82,10 @@ public class MenuActivity extends AppCompatActivity {
     NotificationBadge badge_notification;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.txt_time)
+    TextView txt_time;
+    @BindView(R.id.txt_check_open)
+    TextView txt_check_open;
     CartDataSource cartDataSource;
     Progress progress=new Progress();
     FoodData foodData = new FoodData();
@@ -89,6 +96,7 @@ public class MenuActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         init();
         contactRestaurant();
+        new loadFavoriteByRestaurant().execute();
     }
 
     private void init() {
@@ -101,6 +109,7 @@ public class MenuActivity extends AppCompatActivity {
         btnCartSystem.setOnClickListener(view -> startActivity(new Intent(MenuActivity.this,CartListActivity.class)));
         cartDataSource=new LocalCartDataSource(CartData.getInstance(this).cartDAO());
         countCart();
+
 
     }
     private void contactRestaurant(){
@@ -163,15 +172,23 @@ public class MenuActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
     public void loadMenuByRestaurant(MenuItemEvent event){
         if(event.isSuccess()){
             txtNameRes.setText(event.getRestaurant().getmName());
             txt_address.setText(event.getRestaurant().getmAddress());
+            Time time_opening=event.getRestaurant().getOpening();
+            Time time_closing=event.getRestaurant().getClosing();
+            DateFormat dateFormat=new SimpleDateFormat("HH:mm");
+            String opening=dateFormat.format(time_opening);
+            String closing=dateFormat.format(time_closing);
+            txt_time.setText(new StringBuilder()
+                    .append(opening)
+                    .append("-")
+                    .append(closing));
             if(event.getRestaurant().getmImage()!=null){
-                byte[] decodeString = Base64.decode(event.getRestaurant().getmImage(), Base64.DEFAULT);
-                Bitmap decodebitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-                image_restaurant.setImageBitmap(decodebitmap);
+                image_restaurant.setImageBitmap(Common.getBitmap(event.getRestaurant().getmImage()));
             }
             collapsingToolbarLayout.setTitle(event.getRestaurant().getmName());
             if(Common.isConnectedToInternet(this)){
@@ -179,6 +196,24 @@ public class MenuActivity extends AppCompatActivity {
             }else {
                 Common.showToast(this,"Vui lòng kiểm tra kết nối mạng");
             }
+        }
+
+    }
+    public class loadFavoriteByRestaurant extends AsyncTask<String,String,ArrayList<FavoriteOnlyId>>{
+        @Override
+        protected void onPostExecute(ArrayList<FavoriteOnlyId> favoriteOnlyIds) {
+            if(favoriteOnlyIds.size()>0&&favoriteOnlyIds!=null){
+                Common.currentFavorite=favoriteOnlyIds;
+            }else {
+                Common.currentFavorite=new ArrayList<>();
+            }
+        }
+
+        @Override
+        protected ArrayList<FavoriteOnlyId> doInBackground(String... strings) {
+            ArrayList<FavoriteOnlyId> favoriteOnlyIds;
+            favoriteOnlyIds=foodData.getFavoriteByRestaurant(PreferenceUtils.getUserId(MenuActivity.this),Common.currentRestaurant.getmId());
+            return favoriteOnlyIds;
         }
     }
     public class getMenuByRestaurant extends AsyncTask<String,String,ArrayList<Menu>>{

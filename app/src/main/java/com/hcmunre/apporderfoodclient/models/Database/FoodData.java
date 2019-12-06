@@ -1,7 +1,9 @@
 package com.hcmunre.apporderfoodclient.models.Database;
 
+import com.hcmunre.apporderfoodclient.models.Entity.Favorite;
 import com.hcmunre.apporderfoodclient.models.Entity.Food;
 import com.hcmunre.apporderfoodclient.models.Entity.Menu;
+import com.hcmunre.apporderfoodclient.models.Entity.FavoriteOnlyId;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,5 +56,92 @@ public class FoodData {
         }
         return listMenuFood;
     }
+    public ArrayList<Favorite> getFavoriteByUser(int userId){
+        ArrayList<Favorite> favorites=new ArrayList<>();
+        try {
+            String sql="Exec Sp_SelectFavoriteFood '"+userId+"'";
+            con=dataConnetion.connectionData();
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            Favorite favorite;
+            while(rs.next()){
+                favorite=new Favorite();
+                favorite.setUserId(rs.getInt("UserId"));
+                favorite.setRestaurantId(rs.getInt("RestaurantId"));
+                favorite.setFoodId(rs.getInt("FoodId"));
+                favorite.setFoodName(rs.getString("FoodName"));
+                favorite.setRestaurantName(rs.getString("RestaurantName"));
+                favorite.setFoodImage(rs.getString("FoodImage"));
+                favorite.setPrice(rs.getFloat("Price"));
+                favorites.add(favorite);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return favorites;
+    }
+    public ArrayList<FavoriteOnlyId> getFavoriteByRestaurant(int userId,int restaurantId){
+        ArrayList<FavoriteOnlyId> favorites=new ArrayList<>();
+        try {
+            String sql="Exec Sp_SelectFavoriteByRestaurant '"+userId+"','"+restaurantId+"'";
+            con=dataConnetion.connectionData();
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            FavoriteOnlyId favorite;
+            while(rs.next()){
+                favorite=new FavoriteOnlyId(rs.getInt("FoodId"));
+                favorites.add(favorite);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return favorites;
+    }
+    public boolean deleteFavorite(Favorite favorite){
+        boolean success=false;
+        try {
+            String sql="Exec Sp_DeleteFavorite '"+favorite.getUserId()+"','"+favorite.getRestaurantId()+"'," +
+                    "'"+favorite.getFoodId()+"'";
+            con=dataConnetion.connectionData();
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            if(rs.next()){
+                con.close();
+                success=true;
+            }else {
+                con.close();
+                success=false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  success;
+    }
 
+    public boolean insertFavorite(Favorite favorite) {
+        boolean success=false;
+        try {
+            String sql="{call Sp_InsertFavoriteFood (?,?,?,?,?,?,?)}";
+            con=dataConnetion.connectionData();
+            PreparedStatement pst=con.prepareCall(sql);
+            pst.setInt(1,favorite.getUserId());
+            pst.setInt(2,favorite.getFoodId());
+            pst.setInt(3,favorite.getRestaurantId());
+            pst.setString(4,favorite.getRestaurantName());
+            pst.setString(5,favorite.getFoodName());
+            pst.setString(6,favorite.getFoodImage());
+            pst.setFloat(7,favorite.getPrice());
+            ResultSet rs=pst.executeQuery();
+            if(rs.next()){
+                con.close();
+                success=true;
+            }else {
+                con.close();
+                success=false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 }

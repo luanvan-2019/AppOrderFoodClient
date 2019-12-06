@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email của bạn"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -63,14 +63,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mật khẩu"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/btnSignIn"
-            android:textSize="13dp"
+            android:textSize="15dp"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_gravity="center"
@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:text="Đăng nhập"/>
         <TextView
+            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -109,20 +110,12 @@
                 android:background="@drawable/background_phone_shape"
                 android:gravity="center"
                 android:textAllCaps="false"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:text="Số điện thoại"
                 android:fontFamily="@font/robotoregular"
                 android:textColor="#ffffff"
                 android:textStyle="bold" />
-            <com.facebook.login.widget.LoginButton
-                xmlns:facebook="http://schemas.android.com/apk/res-auto"
-                facebook:com_facebook_login_text="Đăng nhập với Facebook"
-                android:layout_marginTop="20dp"
-                android:padding="20dp"
-                android:id="@+id/btn_login_facebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/FacebookLoginButton"/>
+
         </LinearLayout>
 
 
@@ -145,7 +138,7 @@
             android:text="Bạn chưa có tài khoản?"
             android:fontFamily="@font/robotoregular"
             android:textColor="#2C3646"
-            android:textSize="14dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/txtForgetPass"
@@ -154,7 +147,7 @@
             android:text="Quên mật khẩu?"
             android:fontFamily="@font/robotoregular"
             android:textColor="#2C3646"
-            android:textSize="14dp" />
+            android:textSize="15dp" />
     </LinearLayout>
 
 </RelativeLayout>

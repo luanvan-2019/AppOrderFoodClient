@@ -17,7 +17,7 @@
         android:layout_below="@id/toolbar"
         android:id="@+id/recyc_listFood"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
         <LinearLayout
+            android:background="@color/colorWhite"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="match_parent"

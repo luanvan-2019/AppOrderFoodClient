@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SaiGonFood</string>
+    <string name="app_name">Sài Gòn Food</string>
     <string name="search">Tìm kiếm</string>
     <string name="map_key" translatable="false">AIzaSyDb8vrfFWCuSNigtxvfM-zC-4MvNQlGIFQ</string>
     <string name="title_activity_maps">Map</string>

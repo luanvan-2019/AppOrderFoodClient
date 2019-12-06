@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,8 +47,10 @@ import com.hcmunre.apporderfoodclient.directionHelper.DirectionFinderListener;
 import com.hcmunre.apporderfoodclient.directionHelper.Route;
 import com.hcmunre.apporderfoodclient.interfaces.LocalStatusDataSource;
 import com.hcmunre.apporderfoodclient.interfaces.StatusDataSource;
+import com.hcmunre.apporderfoodclient.models.Database.OrderData;
 import com.hcmunre.apporderfoodclient.models.Database.ShipperData;
 import com.hcmunre.apporderfoodclient.models.Entity.CartData;
+import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.Shipper;
 import com.hcmunre.apporderfoodclient.models.Entity.Status;
 import com.hcmunre.apporderfoodclient.models.eventbus.SentTotalCashEvent;
@@ -56,8 +60,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -88,6 +95,11 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
     Toolbar toolbar;
     @BindView(R.id.image_contact)
     ImageView image_contact;
+    @BindView(R.id.image_chat)
+    ImageView image_chat;
+    @BindView(R.id.txt_name)
+    TextView txt_name;
+    Status status;
     private GoogleMap mMap;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
@@ -97,17 +109,19 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
     double lat, lng;
     String address;
     private static final int REQUEST_LOCATION = 1;
-    CompositeDisposable compositeDisposable=new CompositeDisposable();
-    ShipperData shipperData=new ShipperData();
-    int count=0;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    ShipperData shipperData = new ShipperData();
+    int count = 0;
     Handler handler;
     Runnable runnable;
     Timer timer;
+    OrderData orderData = new OrderData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking_order);
         init();
+        eventClick();
         trackingOrder();
         contactRestaurant();
         sendRequest();
@@ -125,61 +139,53 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setSubtitle(new StringBuilder("Id#").append(Common.curentOrder.getId()));
+        Locale locale = new Locale("vi", "VN");
+        NumberFormat numberFormat = NumberFormat.getInstance(locale);
         txt_name_restaurant.setText(Common.curentOrder.getNameRestaurant());
-    }
-    private void startUpdate(){
-//        handler=new Handler();
-//        runnable=new Runnable() {
-//            @Override
-//            public void run() {
-//                new getInforShipping().execute();
-//                trackingOrder();
-//                count++;
-//                txt_total_price.setText(count+"");
-//                handler.postDelayed(this,3000);
-//            }
-//        };
-//        handler.postDelayed(runnable,3000);
+        txt_total_price.setText(new StringBuilder(numberFormat.format(Common.curentOrder.getTotalPrice()) + "").append("đ"));
     }
 
-    private void trackingOrder(){
-        StatusDataSource cartDataSource=new LocalStatusDataSource(CartData.getInstance(this).statusDao());
-        Status status=new Status();
-        status.setOrderId(Common.curentOrder.getId());
-        status.setStatus(Common.curentOrder.getOrderStatus());
-        compositeDisposable.add(
-                cartDataSource.insertStatus(status)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(()->{
-                },throwable -> {
-                    Log.d(Common.TAG,"Lỗi"+throwable.getMessage());
-                })
-        );
-        compositeDisposable.add(
-                cartDataSource.getAllStatus(Common.curentOrder.getId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(statuses -> {
+    private void eventClick() {
+        image_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TrackingOrderActivity.this, ChatActivity.class));
+            }
+        });
+    }
 
-                    for (int i=0;i<statuses.size();i++){
-                        int status_order=statuses.get(i).getStatus();
-                        if(status_order==1){
-                            image_number_one.setImageResource(R.drawable.ic_success);
-                        }
-                        if(status_order==2){
-                            image_number_two.setImageResource(R.drawable.ic_success);
-                        }
-                        if(Common.isConnectedToInternet(this)){
-                            new getInforShipping().execute();
-                        }else {
-                            Common.showToast(this,"Vui lòng kiểm tra kết nối mạng");
-                        }
-                    }
-                },throwable -> {
-                    Log.d(Common.TAG,"Lỗi"+throwable.getMessage());
-                })
-        );
+    private void startUpdate() {
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                new getInforShipping().execute();
+                getOrderStatus();
+                handler.postDelayed(this, 4000);
+            }
+        };
+        handler.postDelayed(runnable, 4000);
+    }
+
+    private void trackingOrder() {
+        if (Common.isConnectedToInternet(this)) {
+            if (Common.curentOrder.getOrderStatus() == 5) {
+                image_number_one.setImageResource(R.drawable.ic_cancel);
+                txt_confirmed.setText("Cửa hàng đã hủy");
+            }
+        } else {
+            Common.showToast(this, "Vui lòng kiểm tra kết nối mạng");
+        }
+        new getInforShipping().execute();
+        getOrderStatus();
+
+
+    }
+    private void getOrderStatus(){
+        Order order = orderData.getOrderStatus(Common.curentOrder.getId());
+        if (order.getOrderStatus() == 1) {
+            image_number_one.setImageResource(R.drawable.ic_success);
+        }
     }
 
     @Override
@@ -188,20 +194,21 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
         super.onDestroy();
     }
 
-    private void contactRestaurant(){
+    private void contactRestaurant() {
         image_contact.setOnClickListener(view -> {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:"+Common.currentRestaurant.getmPhone()));
+            intent.setData(Uri.parse("tel:" + Common.currentRestaurant.getmPhone()));
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
                 return;
-            }else {
+            } else {
                 startActivity(intent);
             }
 
         });
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -223,7 +230,14 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
         GetCurrentUser getCurrentUser = new GetCurrentUser(TrackingOrderActivity.this);
         address = getCurrentUser.getuser();
         try {
-            new DirectionFinder(this, address, Common.currentRestaurant.getmAddress()).execute();
+            Shipper shipper1 = shipperData.getInforShipper(Common.curentOrder.getId(), 2);
+            if(shipper1!=null){
+                Log.d("BBB","Shipper Map");
+                new DirectionFinder(this, address, shipper1.getAddress()).execute();
+            }else if (Common.curentOrder.getRestaurantAddress() != null) {
+                Log.d("BBB","Restaurant Map");
+                new DirectionFinder(this, address, Common.curentOrder.getRestaurantAddress()).execute();
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -270,8 +284,8 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
-            startActivity(new Intent(this,HomeActivity.class));
+        if (item.getItemId() == android.R.id.home) {
+            startActivity(new Intent(this, HomeActivity.class));
             finish();
         }
 
@@ -347,21 +361,35 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    public class getInforShipping extends AsyncTask<String,String, Shipper>{
+
+    public class getInforShipping extends AsyncTask<String, String, Shipper> {
         @Override
         protected void onPostExecute(Shipper shipper) {
-            if(shipper!=null){
-                if(shipper.getShippingStatus()==3){
+            if (shipper != null) {
+                Shipper shipper1;
+                int status = shipper.getShippingStatus();
+                if (status == 2) {
+                    image_number_one.setImageResource(R.drawable.ic_success);
+                    image_number_two.setImageResource(R.drawable.ic_success);
+                    shipper1 = shipperData.getInforShipper(Common.curentOrder.getId(), 2);
+                    txt_name.setText(shipper1.getName());
+                }
+                if (status == 3) {
+                    shipper1 = shipperData.getInforShipper(Common.curentOrder.getId(), 3);
+                    txt_name.setText(shipper1.getName());
+                    image_number_one.setImageResource(R.drawable.ic_success);
+                    image_number_two.setImageResource(R.drawable.ic_success);
                     image_number_three.setImageResource(R.drawable.ic_success);
                 }
             }
+
 
         }
 
         @Override
         protected Shipper doInBackground(String... strings) {
             Shipper shipper;
-            shipper=shipperData.getInforShipper(Common.curentOrder.getId());
+            shipper = shipperData.getInforShipperOrder(Common.curentOrder.getId());
             return shipper;
         }
     }

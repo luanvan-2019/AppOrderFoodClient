@@ -61,9 +61,7 @@ public class AllCartAdapter extends RecyclerView.Adapter<AllCartAdapter.ViewHold
         AllCartItem cartItem=allCartItems.get(position);
         holder.txt_restaurant_name.setText(cartItem.getRestaurantName());
         if(cartItem.getRestaurantImage()!=null){
-            byte[] decodeString= Base64.decode(cartItem.getRestaurantImage(),Base64.DEFAULT);
-            Bitmap decodeImage= BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
-            holder.image_restaurant.setImageBitmap(decodeImage);
+            holder.image_restaurant.setImageBitmap(Common.getBitmap(cartItem.getRestaurantImage()));
         }
 
         holder.txtTotalPrice.setText(holder.currencyVN.format(cartItem.getTotalPrice()));

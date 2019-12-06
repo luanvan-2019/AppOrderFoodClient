@@ -105,9 +105,16 @@
 
                         <ImageView
                             android:id="@+id/image_contact"
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:src="@drawable/phone" />
+                        <ImageView
+                            android:visibility="gone"
+                            android:layout_marginTop="20dp"
+                            android:id="@+id/image_chat"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_chat" />
 
                     </LinearLayout>
 
@@ -180,12 +187,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cửa hàng đã nhận"/>
-                <TextView
-                    android:id="@+id/txt_shipper_coming"
-                    android:layout_marginTop="25dp"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Shipper đang đến"/>
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/txt_shipper_coming"
+                        android:layout_marginTop="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Shipper đang đến"/>
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/txt_name"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="25dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""/>
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/txt_complete"
                     android:layout_marginTop="25dp"
