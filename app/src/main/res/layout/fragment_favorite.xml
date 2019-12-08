@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.appcompat.widget.Toolbar
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbar">
@@ -23,9 +24,10 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content">
            <androidx.recyclerview.widget.RecyclerView
+               android:background="@color/white"
                android:id="@+id/recyc_favorite"
                android:layout_width="match_parent"
-               android:layout_height="wrap_content"/>
+               android:layout_height="match_parent"/>
            <LinearLayout
                android:gravity="center"
                android:layout_centerInParent="true"

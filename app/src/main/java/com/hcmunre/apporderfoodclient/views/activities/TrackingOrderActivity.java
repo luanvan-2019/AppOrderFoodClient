@@ -9,7 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -30,10 +33,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -229,18 +234,18 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
     private void sendRequest() {
         GetCurrentUser getCurrentUser = new GetCurrentUser(TrackingOrderActivity.this);
         address = getCurrentUser.getuser();
-        try {
-            Shipper shipper1 = shipperData.getInforShipper(Common.curentOrder.getId(), 2);
-            if(shipper1!=null){
-                Log.d("BBB","Shipper Map");
-                new DirectionFinder(this, address, shipper1.getAddress()).execute();
-            }else if (Common.curentOrder.getRestaurantAddress() != null) {
-                Log.d("BBB","Restaurant Map");
-                new DirectionFinder(this, address, Common.curentOrder.getRestaurantAddress()).execute();
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Shipper shipper1 = shipperData.getInforShipper(Common.curentOrder.getId(), 2);
+//            if(shipper1!=null){
+//                Log.d("BBB","Shipper Map");
+//                new DirectionFinder(this, address, shipper1.getAddress()).execute();
+//            }else if (Common.curentOrder.getRestaurantAddress() != null) {
+//                Log.d("BBB","Restaurant Map");
+//                new DirectionFinder(this, address, Common.curentOrder.getRestaurantAddress()).execute();
+//            }
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -263,10 +268,22 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
                 }
                 mMap = googleMap;
                 LatLng currentLocation = new LatLng(lat, lng);
+                try {
+                    Shipper shipper1 = shipperData.getInforShipper(Common.curentOrder.getId(), 2);
+                    if(shipper1!=null){
+                        Log.d("BBB","Shipper Map");
+                        new DirectionFinder(this, currentLocation, shipper1.getAddress()).execute();
+                    }else if (Common.curentOrder.getRestaurantAddress() != null) {
+                        Log.d("BBB","Restaurant Map");
+                        new DirectionFinder(this, currentLocation, Common.curentOrder.getRestaurantAddress()).execute();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
-                originMarkers.add(mMap.addMarker(new MarkerOptions()
-                        .title(address)
-                        .position(currentLocation)));
+//                originMarkers.add(mMap.addMarker(new MarkerOptions()
+//                        .title(address)
+//                        .position(currentLocation)));
 
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -322,18 +339,28 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
-
+        Drawable start = getResources().getDrawable(R.drawable.ic_location);
+        BitmapDescriptor marker_start = getMarkerIconFromDrawable(start);
+        Drawable end = getResources().getDrawable(R.drawable.ic_location_end);
+        BitmapDescriptor marker_end = getMarkerIconFromDrawable(end);
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 17));
             ((TextView) findViewById(R.id.txt_duration)).setText(route.duration.text);
             ((TextView) findViewById(R.id.txt_km)).setText(route.distance.text);
-
+            MapRipple mapRipple = new MapRipple(mMap, route.startLocation, this);
+            mapRipple.withNumberOfRipples(3);
+            mapRipple.withFillColor(Color.BLUE);
+            mapRipple.withStrokewidth(10);
+            mapRipple.withDistance(100);
+            mapRipple.withRippleDuration(12000);
+            mapRipple.withTransparency(0.7f);
+            mapRipple.startRippleMapAnimation();
             originMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
+                    .icon(marker_start)
                     .title(route.startAddress)
                     .position(route.startLocation)));
             destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
+                    .icon(marker_end)
                     .title(route.endAddress)
                     .position(route.endLocation)));
 
@@ -348,7 +375,14 @@ public class TrackingOrderActivity extends AppCompatActivity implements OnMapRea
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
     }
-
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
     private void onGPS() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Enable GPS").setCancelable(false)

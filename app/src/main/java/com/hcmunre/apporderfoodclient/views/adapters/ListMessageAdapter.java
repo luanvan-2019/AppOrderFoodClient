@@ -18,6 +18,9 @@ import com.hcmunre.apporderfoodclient.views.activities.PreferenceUtils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ListMessageAdapter extends RecyclerView.Adapter<ListMessageAdapter.ListMessageHolder> {
 
     private static final int MSG_TYPE_LEFT = 0;
@@ -26,12 +29,7 @@ public class ListMessageAdapter extends RecyclerView.Adapter<ListMessageAdapter.
     Context mContext;
     View v;
     List<ChatMessage> mChatMessage;
-    private AdapterView.OnItemClickListener mOnItemClickListener;
     private String sender;
-
-//    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener){
-//        this.mOnItemClickListener = mOnItemClickListener;
-//    }
 
     public ListMessageAdapter(Context mContext,List<ChatMessage> mChatMessage) {
         this.mChatMessage = mChatMessage;
@@ -65,21 +63,22 @@ public class ListMessageAdapter extends RecyclerView.Adapter<ListMessageAdapter.
     }
 
     class ListMessageHolder extends RecyclerView.ViewHolder {
-
-        TextView show_message,time;
-        ImageView imgHinhanh;
-        //truyen item view vao va anh xa
+        @BindView(R.id.show_message)
+        TextView show_message;
+        @BindView(R.id.time_send_message)
+        TextView time;
+        @BindView(R.id.txt_username)
+        TextView txt_username;
         public ListMessageHolder(@NonNull View itemView) {
             super(itemView);
-            show_message = itemView.findViewById(R.id.show_message);
-            time = itemView.findViewById(R.id.time_send_message);
+            ButterKnife.bind(this,itemView);
 
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mChatMessage.get(position).getSender().equals(sender)){
+        if (mChatMessage.get(position).getUserId().equals(sender)){
             return MSG_TYPE_RIGHT;
         }else return MSG_TYPE_LEFT;
     }

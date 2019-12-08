@@ -81,7 +81,7 @@ public class ChatActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                readMessage(sender,receiver);
+//                readMessage(sender,receiver);
             }
 
             @Override
@@ -107,29 +107,29 @@ public class ChatActivity extends AppCompatActivity {
         ChatMessage chatMessage=restaurantData.getReceiver(PreferenceUtils.getEmail(this));
 //        txtReceiverToolbar.setText(chatMessage.getReceiver());
     }
-    private void readMessage(final String sender, final String receiver) {
-
-        chatMessages = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("chats");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                chatMessages.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatMessage chatMessage = snapshot.getValue(ChatMessage.class);
-                    Log.d("BBB",chatMessage.getSender()+""+chatMessage.getReceiver());
-                    if (chatMessage.getSender() != null ) {
-                        chatMessages.add(chatMessage);
-                    }
-                    listMessageAdapter = new ListMessageAdapter(ChatActivity.this, chatMessages);
-                    recyclerView.setAdapter(listMessageAdapter);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private void readMessage(final String sender, final String receiver) {
+//
+//        chatMessages = new ArrayList<>();
+//        reference = FirebaseDatabase.getInstance().getReference("chats");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                chatMessages.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    ChatMessage chatMessage = snapshot.getValue(ChatMessage.class);
+//                    Log.d("BBB",chatMessage.getSender()+""+chatMessage.getReceiver());
+//                    if (chatMessage.getSender() != null ) {
+//                        chatMessages.add(chatMessage);
+//                    }
+//                    listMessageAdapter = new ListMessageAdapter(ChatActivity.this, chatMessages);
+//                    recyclerView.setAdapter(listMessageAdapter);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 }

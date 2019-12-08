@@ -41,6 +41,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:fillViewport="true"
         app:behavior_overlapTop="16dp"
         android:background="@drawable/background_menu"
         android:layout_width="match_parent"
@@ -145,46 +146,34 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linear2"
+                <com.google.android.material.tabs.TabLayout
                     android:layout_below="@id/linear1"
+                    android:id="@+id/tablayout_order"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#f5f5f5"
-                    android:padding="6dp"
-                    android:orientation="horizontal" />
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_below="@id/linear2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="50dp">
-                    <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
+                    android:background="#ffffff"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/colorPrimary"
+                    app:tabTextAppearance="@style/CustomTextAppearance"
+                    app:tabMode="fixed">
 
-                            android:layout_marginLeft="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Thực đơn"
-                            android:id="@+id/txtmenu"
-                            android:textSize="19sp"/>
-                    </LinearLayout>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyc_detailfood"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
+                </com.google.android.material.tabs.TabLayout>
+
+                <com.hcmunre.apporderfoodclient.views.adapters.CustomViewPager
+                    android:id="@+id/viewpager_report"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tablayout_order"
+                    android:background="#ffffff">
+
+                </com.hcmunre.apporderfoodclient.views.adapters.CustomViewPager>
             </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
     <FrameLayout
-        android:layout_gravity="bottom|end"
+        android:layout_marginTop="170dp"
+        android:layout_gravity="right"
         android:layout_width="wrap_content"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content">
 
         <com.nex3z.notificationbadge.NotificationBadge

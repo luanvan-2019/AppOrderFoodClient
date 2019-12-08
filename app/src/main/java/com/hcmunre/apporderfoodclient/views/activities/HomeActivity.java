@@ -39,21 +39,8 @@ public class HomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
         }
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.hcmunre.apporderfoodclient",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
         FirebaseMessaging.getInstance().subscribeToTopic(Common.getTopicChannelUser(PreferenceUtils.getUserId(this)));
+        FirebaseMessaging.getInstance().subscribeToTopic(Common.getTopicChannelShippper(PreferenceUtils.getUserId(this)));
 
     }
 

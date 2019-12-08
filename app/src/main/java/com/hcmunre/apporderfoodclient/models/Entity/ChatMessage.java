@@ -2,15 +2,16 @@ package com.hcmunre.apporderfoodclient.models.Entity;
 
 public class ChatMessage {
 
-    private String sender;
-    private String receiver;
+    private String userId;
+    private String restaurantId;
     private String message;
     private long time;
 
-    public ChatMessage(String sender, String receiver, String message) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public ChatMessage(String userId, String restaurantId, String message, long time) {
+        this.userId = userId;
+        this.restaurantId = restaurantId;
         this.message = message;
+        this.time = time;
     }
 
     public ChatMessage() {
@@ -32,19 +33,19 @@ public class ChatMessage {
         this.time = time;
     }
 
-    public String getSender() {
-        return sender;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

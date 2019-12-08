@@ -26,9 +26,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.hcmunre.apporderfoodclient.R;
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.commons.Progress;
@@ -39,7 +41,9 @@ import com.hcmunre.apporderfoodclient.models.Entity.LocalCartDataSource;
 import com.hcmunre.apporderfoodclient.models.Entity.Menu;
 import com.hcmunre.apporderfoodclient.models.Entity.FavoriteOnlyId;
 import com.hcmunre.apporderfoodclient.models.eventbus.MenuItemEvent;
+import com.hcmunre.apporderfoodclient.views.adapters.CustomViewPager;
 import com.hcmunre.apporderfoodclient.views.adapters.MenuAdapter;
+import com.hcmunre.apporderfoodclient.views.adapters.TabMenuFragmentAdapter;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,8 +67,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MenuActivity extends AppCompatActivity {
-    @BindView(R.id.recyc_detailfood)
-    RecyclerView recyc_detailfood;
     @BindView(R.id.txtrestaurant)
     TextView txtNameRes;
     @BindView(R.id.txt_address)
@@ -86,6 +88,11 @@ public class MenuActivity extends AppCompatActivity {
     TextView txt_time;
     @BindView(R.id.txt_check_open)
     TextView txt_check_open;
+    @BindView(R.id.tablayout_order)
+    TabLayout tabLayout;
+    @BindView(R.id.viewpager_report)
+    ViewPager viewPager;
+    TabMenuFragmentAdapter tabOrderFragmentAdapter;
     CartDataSource cartDataSource;
     Progress progress=new Progress();
     FoodData foodData = new FoodData();
@@ -95,14 +102,12 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         ButterKnife.bind(this);
         init();
+        tabOrder();
         contactRestaurant();
         new loadFavoriteByRestaurant().execute();
     }
 
     private void init() {
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        recyc_detailfood.setLayoutManager(layoutManager);
-        recyc_detailfood.setItemAnimator(new DefaultItemAnimator());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -111,6 +116,33 @@ public class MenuActivity extends AppCompatActivity {
         countCart();
 
 
+    }
+    private void tabOrder(){
+        tabLayout.addTab(tabLayout.newTab().setText("Thực đơn"));
+        tabLayout.addTab(tabLayout.newTab().setText("Bình luận"));
+        tabOrderFragmentAdapter = new TabMenuFragmentAdapter(this.getSupportFragmentManager(),tabLayout.getTabCount());
+        CustomViewPager customViewPager=new CustomViewPager(this);
+        customViewPager.setPagingEnabled(false);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setAdapter(tabOrderFragmentAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tabLayout.getSelectedTabPosition());
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
     private void contactRestaurant(){
         txt_contact.setOnClickListener(view -> {
@@ -191,11 +223,6 @@ public class MenuActivity extends AppCompatActivity {
                 image_restaurant.setImageBitmap(Common.getBitmap(event.getRestaurant().getmImage()));
             }
             collapsingToolbarLayout.setTitle(event.getRestaurant().getmName());
-            if(Common.isConnectedToInternet(this)){
-                new getMenuByRestaurant(event.getRestaurant().getmId());
-            }else {
-                Common.showToast(this,"Vui lòng kiểm tra kết nối mạng");
-            }
         }
 
     }
@@ -216,35 +243,35 @@ public class MenuActivity extends AppCompatActivity {
             return favoriteOnlyIds;
         }
     }
-    public class getMenuByRestaurant extends AsyncTask<String,String,ArrayList<Menu>>{
-
-        int restaurantId;
-
-        public getMenuByRestaurant(int restaurantId) {
-            this.restaurantId = restaurantId;
-            this.execute();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progress.showProgress(MenuActivity.this);
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Menu> menus) {
-            menuAdapter = new MenuAdapter(MenuActivity.this, menus);
-            recyc_detailfood.setAdapter(menuAdapter);
-            menuAdapter.notifyDataSetChanged();
-            progress.hideProgress();
-        }
-
-        @Override
-        protected ArrayList<Menu> doInBackground(String... strings) {
-            ArrayList<Menu> menus;
-            menus = foodData.getMenuResFood(restaurantId);
-            return menus;
-        }
-    }
+//    public class getMenuByRestaurant extends AsyncTask<String,String,ArrayList<Menu>>{
+//
+//        int restaurantId;
+//
+//        public getMenuByRestaurant(int restaurantId) {
+//            this.restaurantId = restaurantId;
+//            this.execute();
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            progress.showProgress(MenuActivity.this);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ArrayList<Menu> menus) {
+//            menuAdapter = new MenuAdapter(MenuActivity.this, menus);
+//            recyc_detailfood.setAdapter(menuAdapter);
+//            menuAdapter.notifyDataSetChanged();
+//            progress.hideProgress();
+//        }
+//
+//        @Override
+//        protected ArrayList<Menu> doInBackground(String... strings) {
+//            ArrayList<Menu> menus;
+//            menus = foodData.getMenuResFood(restaurantId);
+//            return menus;
+//        }
+//    }
 
     @Override
     public void onBackPressed() {

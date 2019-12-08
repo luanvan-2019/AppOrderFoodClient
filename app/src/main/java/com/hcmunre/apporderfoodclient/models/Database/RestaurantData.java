@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class RestaurantData {
     Connection con;
@@ -157,7 +156,7 @@ public class RestaurantData {
             ResultSet rs=pst.executeQuery();
             if(rs.next()){
                 chatMessage=new ChatMessage();
-                chatMessage.setReceiver(rs.getString("NameOwner"));
+                chatMessage.setRestaurantId(rs.getString("NameOwner"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

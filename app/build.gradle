@@ -90,5 +90,7 @@ dependencies {
 
     implementation 'com.github.msayan:otp-view:v1.0.2'
 
+    implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
+
 
 }

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fragmentOrder">
     <LinearLayout
+        android:id="@+id/linear_draft"
         android:gravity="center"
         android:layout_centerInParent="true"
         android:orientation="vertical"
@@ -16,12 +17,12 @@
             android:src="@drawable/ic_shipping"/>
         <TextView
             android:layout_below="@id/img_delivery"
+            android:id="@+id/txt_order_history"
             android:fontFamily="@font/robotoregular"
-            android:textSize="25sp"
-            android:text="Chưa có đơn hàng"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_order"/>
+            android:text="Chưa có đơn nháp"
+            android:textSize="20sp"/>
     </LinearLayout>
     <TextView
         android:visibility="gone"

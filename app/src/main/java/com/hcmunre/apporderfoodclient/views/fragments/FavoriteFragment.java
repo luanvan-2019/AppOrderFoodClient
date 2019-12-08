@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -40,8 +41,6 @@ public class FavoriteFragment extends Fragment {
     TextView txt_order_history;
     @BindView(R.id.img_delivery)
     ImageView img_delivery;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     FoodData foodData=new FoodData();
     public FavoriteFragment() {
         // Required empty public constructor
@@ -57,9 +56,9 @@ public class FavoriteFragment extends Fragment {
         return view;
     }
     private void init(){
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyc_favorite.setLayoutManager(linearLayoutManager);
-        recyc_favorite.setItemAnimator(new DefaultItemAnimator());
+        recyc_favorite.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         swipe_layout.setColorSchemeResources(android.R.color.holo_blue_dark);
         txt_order_history.setVisibility(View.GONE);
         img_delivery.setVisibility(View.GONE);

@@ -116,7 +116,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     RecyclerView recyc_order_detail;
     CompositeDisposable compositeDisposable;
     CartDataSource cartDataSource;
-    OrderData orderData;
+    OrderData orderData=new OrderData();
     UserData userData = new UserData();
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int PAYPAL_REQUEST_CODE = 2;
@@ -296,7 +296,6 @@ public class DetailOrderActivity extends AppCompatActivity {
     }
 
     private void getOrderNumber(int payment) {
-            orderData = new OrderData();
             compositeDisposable.add(cartDataSource.getAllCart(PreferenceUtils.getEmail(this),
                     Common.currentRestaurant.getmId())
                     .subscribeOn(Schedulers.io())
@@ -337,7 +336,31 @@ public class DetailOrderActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onSuccess(Integer integer) {
 
-                                                                    new getOrderNumberBK(DetailOrderActivity.this, cartItems);
+//                                                                    List<OrderDetail> orderDetails = new ArrayList<>();
+//                                                                    OrderDetail orderDetail = null;
+//                                                                    for(CartItem cartItem: cartItems){
+//                                                                        orderDetail= new OrderDetail();
+//                                                                        orderDetail.setOrderId(Common.curentOrder.getId());
+//                                                                        orderDetail.setFoodId(cartItem.getFoodId());
+//                                                                        Log.d("BBB","FoodId"+cartItem.getFoodId());
+//                                                                        orderDetail.setPrice(cartItem.getFoodPrice());
+//                                                                        orderDetail.setQuantity(cartItem.getFoodQuantity());
+//                                                                        orderDetails.add(orderDetail);
+//                                                                        Log.d("BBB",orderDetail+"");
+//                                                                    }
+////                                                                    for (int i = 0; i < cartItems.size(); i++) {
+//////                                                                        orderDetail.setOrderId(Common.curentOrder.getId());
+////                                                                        orderDetail.setOrderId(cartItems.get(i).getId());
+////                                                                        Log.d("BBB","Id"+cartItems.get(i).getId());
+////                                                                        orderDetail.setFoodId(cartItems.get(i).getFoodId());
+////                                                                        Log.d("BBB","FoodId"+cartItems.get(i).getFoodId());
+////                                                                        orderDetail.setPrice(cartItems.get(i).getFoodPrice());
+////                                                                        orderDetail.setQuantity(cartItems.get(i).getFoodQuantity());
+////                                                                        orderDetails.add(orderDetail);
+////                                                                    }
+//                                                                    Log.d("BBB","ListOrderDetail "+orderDetails);
+//                                                                    orderData.insertOrderDetail(orderDetails);
+                                                                    new getOrderNumberBK(DetailOrderActivity.this,cartItems);
                                                                     Common.showToast(DetailOrderActivity.this,"Đặt hàng thành công");
                                                                     NOTIFICATION_TITLE = "App Food";
                                                                     NOTIFICATION_MESSAGE ="Bạn có đơn hàng mới "+Common.curentOrder.getId()+" ?";
@@ -462,8 +485,8 @@ public class DetailOrderActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<OrderDetail> orderDetails) {
             if (orderDetails.size() > 0) {
+                Log.d("BBB","ListOrderDetail"+orderDetails);
                 orderData.insertOrderDetail(orderDetails);
-                //
 
             } else {
                 Log.d("BBB", "Không thể thực hiện");
@@ -475,10 +498,12 @@ public class DetailOrderActivity extends AppCompatActivity {
         @Override
         protected List<OrderDetail> doInBackground(String... strings) {
             List<OrderDetail> orderDetails = new ArrayList<>();
-            OrderDetail orderDetail = new OrderDetail();
+            OrderDetail orderDetail;
             for (int i = 0; i < cartItems.size(); i++) {
+                orderDetail = new OrderDetail();
                 orderDetail.setOrderId(Common.curentOrder.getId());
                 orderDetail.setFoodId(cartItems.get(i).getFoodId());
+                Log.d("BBB","FoodId"+cartItems.get(i).getFoodId());
                 orderDetail.setPrice(cartItems.get(i).getFoodPrice());
                 orderDetail.setQuantity(cartItems.get(i).getFoodQuantity());
                 orderDetails.add(orderDetail);

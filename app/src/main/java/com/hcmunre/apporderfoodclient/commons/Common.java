@@ -121,6 +121,9 @@ public class Common {
     public static String getTopicChannelUser(int id) {
         return new StringBuilder("User").append(id).toString();
     }
+    public static String getTopicChannelShippper(int userId) {
+        return new StringBuilder("Shipper").append(userId).toString();
+    }
     public static String createTopicSender(String topicChannel) {
         return new StringBuilder("/topics/").append(topicChannel).toString();
     }

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,7 +78,12 @@ public class CreateUserInfoActivity extends AppCompatActivity {
                     edit_email.setError("Email sai");
                 }
                 else{
-                    new  createNewUser().execute();
+                    boolean success = userData.checkExistUser(email);
+                        if (success == true) {
+                            Toast.makeText(CreateUserInfoActivity.this, "Email đã tồn tại", Toast.LENGTH_SHORT).show();
+                        } else {
+                            new  createNewUser().execute();
+                        }
                 }
             }
         });
@@ -155,4 +161,5 @@ public class CreateUserInfoActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

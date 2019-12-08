@@ -1,9 +1,12 @@
 package com.hcmunre.apporderfoodclient.models.Database;
 
+import android.util.Log;
+
 import com.hcmunre.apporderfoodclient.commons.Common;
 import com.hcmunre.apporderfoodclient.models.Entity.Order;
 import com.hcmunre.apporderfoodclient.models.Entity.OrderDetail;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,10 +55,11 @@ public class OrderData {
     }
     //insert multi order
     public void insertOrderDetail(List<OrderDetail> listOrder){
+        con = dataConnetion.connectionData();
+        PreparedStatement pst=null;
         try {
             String sql = "Exec Sp_InsertOrderDetail (?,?,?,?)";
-            con = dataConnetion.connectionData();
-            PreparedStatement pst = con.prepareCall(sql);
+            pst = con.prepareCall(sql);
             for(OrderDetail orderDetail: listOrder){
                 pst.setInt(1,orderDetail.getOrderId());
                 pst.setInt(2, orderDetail.getFoodId());
@@ -64,8 +68,17 @@ public class OrderData {
                 pst.addBatch();
             }
             pst.executeBatch();
+            Log.d("BBB","Đã thực hiện");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                pst.close();
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
     public ArrayList<Order> getAllOrder(int userId){

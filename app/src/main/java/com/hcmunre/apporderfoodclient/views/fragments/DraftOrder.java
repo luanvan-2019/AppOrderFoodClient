@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,10 +40,8 @@ import io.reactivex.schedulers.Schedulers;
 public class DraftOrder extends Fragment {
     @BindView(R.id.recyc_order)
     RecyclerView recyc_order;
-    @BindView(R.id.txt_order)
-    TextView txt_order;
-    @BindView(R.id.image_delivery)
-    ImageView image_delivery;
+    @BindView(R.id.linear_draft)
+    LinearLayout linear_draft;
     Unbinder unbinder;
     CompositeDisposable compositeDisposable;
     CartDataSource cartDataSource;
@@ -74,15 +73,13 @@ public class DraftOrder extends Fragment {
                     if (allCartItems.size() > 0) {
                         AllCartAdapter cartAdapter = new AllCartAdapter(getActivity(), allCartItems);
                         recyc_order.setAdapter(cartAdapter);
-                        txt_order.setVisibility(View.GONE);
-                        image_delivery.setVisibility(View.GONE);
+                        linear_draft.setVisibility(View.GONE);
                     } else {
-                        txt_order.setVisibility(View.VISIBLE);
-                        image_delivery.setVisibility(View.VISIBLE);
+                        linear_draft.setVisibility(View.VISIBLE);
                     }
 
                 }, throwable -> {
-                    image_delivery.setVisibility(View.GONE);
+                    linear_draft.setVisibility(View.GONE);
                     Toast.makeText(getActivity(), "[GET ALL CART]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 })
         );
